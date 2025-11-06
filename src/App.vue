@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <router-view />
+      <button @click="$router.push('/register')">Register</button>
     </v-main>
   </v-app>
 </template>
