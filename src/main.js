@@ -14,10 +14,13 @@ loadFonts();
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  scrollBehavior() {
+    return { top: 0 };
+  },
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "home",
       component: homePage,
     },
     {
@@ -31,7 +34,7 @@ const router = createRouter({
       component: UserLogin,
     },
     {
-      path: "/pant-history",
+      path: "/min-pant",
       name: "PantHistory",
       component: PantHistory,
     },

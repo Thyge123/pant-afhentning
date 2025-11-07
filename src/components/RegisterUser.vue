@@ -46,12 +46,6 @@
 
           <template #[`item.2`]>
             <v-text-field
-              v-model="street"
-              :rules="streetRules"
-              label="Vejnavn og husnummer"
-              required
-            ></v-text-field>
-            <v-text-field
               v-model="city"
               :rules="cityRules"
               label="By"
@@ -63,6 +57,12 @@
               label="Postnummer"
               required
               type="number"
+            ></v-text-field>
+            <v-text-field
+              v-model="street"
+              :rules="streetRules"
+              label="Vejnavn og husnummer"
+              required
             ></v-text-field>
           </template>
 
@@ -87,7 +87,7 @@
         </v-stepper>
       </v-form>
     </div>
-    <v-btn :disabled="!valid" type="submit" :style="buttonStyle"
+    <v-btn :disabled="!isFormComplete" type="submit" :style="buttonStyle"
       >Opret bruger</v-btn
     >
     <p class="login-link">
@@ -210,7 +210,7 @@
     },
     computed: {
       buttonStyle() {
-        if (this.valid) {
+        if (this.isFormComplete) {
           return {
             backgroundColor: "#93c14e", // Green color for valid state
             color: "white",
@@ -221,6 +221,21 @@
             color: "#666666",
           };
         }
+      },
+      isFormComplete() {
+        return (
+          this.firstname &&
+          this.lastname &&
+          this.birthdate &&
+          this.email &&
+          this.city &&
+          this.zip &&
+          this.street &&
+          this.password &&
+          this.confirmPassword &&
+          this.password === this.confirmPassword &&
+          this.valid
+        );
       },
     },
     methods: {
@@ -246,7 +261,12 @@
     justify-content: center;
   }
 
+  /*
   ::v-deep .v-stepper-header {
+    box-shadow: none !important;
+  }
+*/
+  :deep(.v-stepper-header) {
     box-shadow: none !important;
   }
 
