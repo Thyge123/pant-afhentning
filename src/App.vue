@@ -6,7 +6,7 @@
         :is-open="isMenuOpen"
         @toggle-menu="isMenuOpen = $event"
       />
-      <router-view />
+      <router-view/>
     </v-main>
   </v-app>
 </template>
@@ -19,8 +19,8 @@
       BurgerMenu,
     },
 
-    data() {
-      return {
+    data: () => ({
+      isMenuOpen: false,
         activities: [
             {
             id: 1,
@@ -59,14 +59,13 @@
             status: 4 // Ahentet og betalt
             }
         ],
-        statusMap: {
-          1: 'Gemt',
-          2: 'Venter afhentning',
-          3: 'Afhentet',
-          4: 'Ahentet og betalt'
-        }
-      };
-    },
+      statusMap: {
+        1: 'Gemt',
+        2: 'Venter afhentning',
+        3: 'Afhentet',
+        4: 'Ahentet og betalt'
+      }
+    }),
     methods: {
       getStatusColor(status) {
         switch(status) {
@@ -87,15 +86,14 @@
         statusMap: this.statusMap,
         getStatusColor: this.getStatusColor
       };
-    }
-    data: () => ({
-      isMenuOpen: false,
-    }),
+    },
+    
     computed: {
       showMenu() {
         const hiddenPaths = ["/login", "/register"];
         return !hiddenPaths.includes(this.$route.path.toLowerCase());
       },
-    },
+    }
   };
 </script>
+
