@@ -1,7 +1,28 @@
 <template>
   <div class="burger-menu">
-    <v-app-bar-nav-icon @click="toggleMenu"></v-app-bar-nav-icon>
-    <v-navigation-drawer location="bottom" temporary v-model="isOpenLocal" app>
+    <v-app-bar :elevation="2">
+      <v-img :src="imageURL" alt="Logo" max-width="100" contain class="ml-2" />
+      <v-spacer></v-spacer>
+      <transition name="icon-fade" mode="out-in">
+        <v-app-bar-nav-icon
+          v-if="!isOpenLocal"
+          key="menu"
+          @click="toggleMenu"
+          size="x-large"
+          density="compact"
+        ></v-app-bar-nav-icon>
+        <v-btn
+          v-else
+          key="close"
+          icon="mdi-close"
+          @click="toggleMenu"
+          size="x-large"
+          density="compact"
+          variant="text"
+        ></v-btn>
+      </transition>
+    </v-app-bar>
+    <v-navigation-drawer location="top" temporary v-model="isOpenLocal" app>
       <v-list density="compact" nav>
         <v-list-item
           prepend-icon="mdi-home"
@@ -33,6 +54,7 @@
           class="log-out"
         >
         </v-list-item>
+        <!--
         <v-divider />
         <v-list-item
           prepend-icon="mdi-information-outline"
@@ -48,6 +70,7 @@
           @click="$router.push('/Login')"
           title="Login"
         ></v-list-item>
+        -->
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -65,6 +88,8 @@
     data() {
       return {
         isOpenLocal: this.isOpen,
+        imageURL:
+          "https://www.greatplacetowork.dk/images/Arbejdspladsprofiler/Dansk-Retursystem/Dansk-Retursystem-logo-profil.webp",
       };
     },
     methods: {
@@ -95,7 +120,7 @@
   }
 
   .v-navigation-drawer {
-    height: 17rem !important; /* 12 REM height */
+    height: 11.5rem !important; /* 11.5 REM height */
     overflow-y: hidden !important;
   }
 
@@ -109,5 +134,23 @@
 
   ::v-deep .v-list-item__spacer {
     width: 0.25rem !important;
+  }
+
+  .icon-fade-enter-active,
+  .icon-fade-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .icon-fade-enter-from {
+    opacity: 0;
+  }
+
+  .icon-fade-leave-to {
+    opacity: 0;
+  }
+
+  .icon-fade-enter-to,
+  .icon-fade-leave-from {
+    opacity: 1;
   }
 </style>
