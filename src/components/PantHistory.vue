@@ -1,10 +1,10 @@
 <template>
   <div class="pant-history">
-    <h2>Min pant</h2>
+    <!--<h2>Min pant</h2>-->
     <v-card>
       <div>
-        <p class="pant-history-link">
-          <router-link to="/login" class="see-all-link">
+        <p class="pant-history-link" v-if="ShowMoreLink">
+          <router-link to="/min-pant" class="see-all-link">
             Mere<v-icon icon="mdi mdi-arrow-right" size="x-small"></v-icon
           ></router-link>
         </p>
@@ -12,7 +12,7 @@
       <v-table>
         <thead>
           <tr>
-            <th class="text-left"></th>
+            <th class="text-left" v-if="IsExpandable"></th>
             <th class="text-left">Dato</th>
             <th class="text-left">Status</th>
             <th class="text-left">Antal</th>
@@ -20,16 +20,16 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="(entry, index) in pantHistory" :key="index">
+          <template v-for="(entry, index) in ProcessedPantHistory" :key="index">
             <tr
-              @click="selectRow(entry)"
+              @click="selectRow(index)"
               class="clickable-row"
-              :class="{ 'row-selected': selectedRow === entry }"
+              :class="{ 'row-selected': selectedRow === index }"
             >
-              <td v-if="selectedRow !== entry">
+              <td v-if="selectedRow !== index && IsExpandable">
                 <v-icon icon="mdi mdi-plus" size="x-small"></v-icon>
               </td>
-              <td v-else>
+              <td v-else-if="IsExpandable">
                 <v-icon icon="mdi mdi-minus" size="x-small"></v-icon>
               </td>
               <td>{{ entry.date }}</td>
@@ -41,23 +41,25 @@
               <td>{{ entry.amount }}</td>
               <td>{{ entry.totalPrice }}</td>
             </tr>
-            <transition name="expand">
-              <tr v-if="selectedRow === entry && expandRow && entry.items">
-                <td colspan="5" class="expanded-details">
-                  <div class="pa-4">
-                    <p class="font-weight-bold mb-2">Detaljer:</p>
-                    <p v-for="(item, i) in entry.items" :key="i">
-                      - {{ item.type }}: {{ item.quantity }} stk.
-                    </p>
+            <tr v-if="selectedRow === index && expandRow && entry.items">
+              <td colspan="5" class="expanded-details">
+                <div class="items-grid">
+                  <div
+                    v-for="(item, i) in entry.items"
+                    :key="i"
+                    class="item-row"
+                  >
+                    <span class="item-type">{{ item.type }}</span>
+                    <span class="item-quantity">{{ item.quantity }} stk.</span>
                   </div>
-                </td>
-              </tr>
-            </transition>
+                </div>
+              </td>
+            </tr>
           </template>
         </tbody>
-        <tfoot>
+        <tfoot v-if="!IsPriceHidden && !IsAmountHidden">
           <tr>
-            <td></td>
+            <td v-if="IsExpandable"></td>
             <td class="font-weight-bold">Total:</td>
             <td></td>
             <td class="font-weight-bold">{{ totalAmount }}</td>
@@ -72,6 +74,24 @@
 <script>
   export default {
     name: "PantHistory",
+    props: {
+      IsPriceHidden: {
+        type: Boolean,
+        default: false,
+      },
+      IsAmountHidden: {
+        type: Boolean,
+        default: false,
+      },
+      IsExpandable: {
+        type: Boolean,
+        default: true,
+      },
+      ShowMoreLink: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data() {
       return {
         selectedRow: null,
@@ -80,8 +100,6 @@
           {
             date: "2024-01-01",
             status: "Gemt",
-            amount: 50,
-            totalPrice: 500,
             items: [
               { type: "Faxe Kondi 0.33L", pant: "A", quantity: 30 },
               { type: "Coca Cola 0.5L", pant: "B", quantity: 20 },
@@ -91,8 +109,6 @@
           {
             date: "2024-02-15",
             status: "Afhentet",
-            amount: 30,
-            totalPrice: 300,
             items: [
               { type: "Faxe Kondi 0.33L", pant: "A", quantity: 30 },
               { type: "Coca Cola 0.5L", pant: "B", quantity: 20 },
@@ -102,8 +118,6 @@
           {
             date: "2024-03-10",
             status: "Afsluttet",
-            amount: 40,
-            totalPrice: 400,
             items: [
               { type: "Faxe Kondi 0.33L", pant: "A", quantity: 30 },
               { type: "Coca Cola 0.5L", pant: "B", quantity: 20 },
@@ -115,13 +129,47 @@
     },
     computed: {
       totalAmount() {
-        return this.pantHistory.reduce((sum, entry) => sum + entry.amount, 0);
+        return this.ProcessedPantHistory.reduce(
+          (sum, entry) => sum + entry.amount,
+          0
+        );
       },
       totalPrice() {
-        return this.pantHistory.reduce(
+        return this.ProcessedPantHistory.reduce(
           (sum, entry) => sum + entry.totalPrice,
           0
         );
+      },
+      ProcessedPantHistory() {
+        // Definer hvor meget hver pant type er værd
+        const pantValues = {
+          A: 1, // Dåser = 1 kr
+          B: 1.5, // Flasker = 1.5 kr
+          C: 3, // Store flasker = 3 kr
+        };
+
+        // Gå gennem hver objekt i arrayet og beregn total
+        return this.pantHistory.map((entry) => {
+          // Tæl det samlede antal flasker i hver entry
+          const amount = entry.items.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+          );
+
+          // Beregn totalprisen for hver entry
+          // For hver vare: gang mængde med pantværdi
+          const totalPrice = entry.items.reduce(
+            (sum, item) => sum + item.quantity * pantValues[item.pant],
+            0
+          );
+
+          // Returner entry med de beregnede værdier tilføjet
+          return {
+            ...entry, // Behold alle originale data (dato, status, varer)
+            amount, // Tilføj samlet flaskantal
+            totalPrice, // Tilføj totalpris
+          };
+        });
       },
     },
     methods: {
@@ -137,12 +185,15 @@
             return "grey";
         }
       },
-      selectRow(entry) {
-        if (this.selectedRow === entry) {
+      selectRow(index) {
+        if (this.IsExpandable === false) {
+          return;
+        }
+        if (this.selectedRow === index) {
           this.clearSelection();
           return;
         }
-        this.selectedRow = entry;
+        this.selectedRow = index;
         this.expandRow = true;
       },
       clearSelection() {
@@ -185,6 +236,32 @@
   .expanded-details {
     background-color: #fafafa;
     border-bottom: 1px solid #e0e0e0;
+    padding: 8px 16px;
+  }
+
+  .items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    font-size: 0.75rem;
+    padding: 2px 0;
+  }
+
+  .item-type {
+    color: #424242;
+  }
+
+  .item-quantity {
+    color: #424242;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: right;
   }
 
   .pant-history-link {
