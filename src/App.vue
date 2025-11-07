@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <v-main>
-      <router-view />
       <BurgerMenu
         v-if="showMenu"
         :is-open="isMenuOpen"
         @toggle-menu="isMenuOpen = $event"
       />
+      <router-view />
     </v-main>
   </v-app>
 </template>

@@ -1,60 +1,66 @@
 <template>
-  <div class="burger-menu">
-    <v-app-bar :elevation="2">
-      <v-img :src="imageURL" alt="Logo" max-width="100" contain class="ml-2" />
-      <v-spacer></v-spacer>
-      <transition name="icon-fade" mode="out-in">
-        <v-app-bar-nav-icon
-          v-if="!isOpenLocal"
-          key="menu"
-          @click="toggleMenu"
-          size="x-large"
-          density="compact"
-        ></v-app-bar-nav-icon>
-        <v-btn
-          v-else
-          key="close"
-          icon="mdi-close"
-          @click="toggleMenu"
-          size="x-large"
-          density="compact"
-          variant="text"
-        ></v-btn>
-      </transition>
-    </v-app-bar>
-    <v-navigation-drawer location="top" temporary v-model="isOpenLocal" app>
-      <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-home"
-          link
-          @click="$router.push('/')"
-          title="Hjem"
-        >
-        </v-list-item>
-        <v-list-item
-          prepend-icon="mdi-history"
-          link
-          @click="$router.push('/pant-history')"
-          title="Pant Historik"
-        >
-        </v-list-item>
-        <v-list-item
-          prepend-icon="mdi-moped-outline"
-          link
-          @click="$router.push('/')"
-          title="Afhenter"
-        >
-        </v-list-item>
-        <v-divider />
-        <v-list-item
-          prepend-icon="mdi-logout"
-          link
-          @click="$router.push('/')"
-          title="Log Ud"
-          class="log-out"
-        >
-        </v-list-item>
-        <!--
+  <v-app-bar :elevation="2" class="app-bar-padding">
+    <v-img
+      :src="imageURL"
+      alt="Logo"
+      max-width="100"
+      contain
+      class="ml-2"
+      @click="$router.push('/')"
+    />
+    <v-spacer></v-spacer>
+    <transition name="icon-fade" mode="out-in">
+      <v-app-bar-nav-icon
+        v-if="!isOpenLocal"
+        key="menu"
+        @click="toggleMenu"
+        size="x-large"
+        density="compact"
+      ></v-app-bar-nav-icon>
+      <v-btn
+        v-else
+        key="close"
+        icon="mdi-close"
+        @click="toggleMenu"
+        size="x-large"
+        density="compact"
+        variant="text"
+      ></v-btn>
+    </transition>
+  </v-app-bar>
+  <v-navigation-drawer location="top" temporary v-model="isOpenLocal" app>
+    <v-list density="compact" nav>
+      <v-list-item
+        prepend-icon="mdi-home"
+        link
+        @click="$router.push('/')"
+        title="Hjem"
+      >
+      </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-history"
+        link
+        @click="$router.push('/pant-history')"
+        title="Pant Historik"
+      >
+      </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-moped-outline"
+        link
+        @click="$router.push('/')"
+        title="Afhenter"
+      >
+      </v-list-item>
+      <v-divider />
+      <v-list-item
+        prepend-icon="mdi-logout"
+        link
+        @click="$router.push('/')"
+        title="Log Ud"
+        class="log-out"
+      >
+      </v-list-item>
+      <!--
         <v-divider />
         <v-list-item
           prepend-icon="mdi-information-outline"
@@ -71,9 +77,8 @@
           title="Login"
         ></v-list-item>
         -->
-      </v-list>
-    </v-navigation-drawer>
-  </div>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -109,22 +114,20 @@
 </script>
 
 <style scoped>
-  .burger-menu {
-    width: 50px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 45px;
-    float: right;
+  .app-bar-padding {
+    padding: 0 10px !important;
   }
-
   .v-navigation-drawer {
     height: 11.5rem !important; /* 11.5 REM height */
     overflow-y: hidden !important;
   }
 
-  ::v-deep .v-navigation-drawer__content {
+  /*
+  ::v-deep :deep(.v-navigation-drawer__content) .v-navigation-drawer__content {
+    overflow-y: hidden !important;
+  }
+*/
+  :deep(.v-navigation-drawer__content) {
     overflow-y: hidden !important;
   }
 
@@ -132,7 +135,12 @@
     color: red;
   }
 
+  /*
   ::v-deep .v-list-item__spacer {
+    width: 0.25rem !important;
+  }
+*/
+  :deep(.v-list-item__spacer) {
     width: 0.25rem !important;
   }
 
