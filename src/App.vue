@@ -2,19 +2,31 @@
   <v-app>
     <v-main>
       <router-view />
-      <button @click="$router.push('/register')">Register</button>
-      <br />
-      <button @click="$router.push('/pant-history')">Pant History</button>
+      <BurgerMenu
+        v-if="showMenu"
+        :is-open="isMenuOpen"
+        @toggle-menu="isMenuOpen = $event"
+      />
     </v-main>
   </v-app>
 </template>
 
 <script>
+  import BurgerMenu from "./components/BurgerMenu.vue";
   export default {
     name: "App",
+    components: {
+      BurgerMenu,
+    },
 
     data: () => ({
-      //
+      isMenuOpen: false,
     }),
+    computed: {
+      showMenu() {
+        const hiddenPaths = ["/login", "/register"];
+        return !hiddenPaths.includes(this.$route.path.toLowerCase());
+      },
+    },
   };
 </script>
