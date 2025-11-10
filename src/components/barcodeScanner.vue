@@ -16,7 +16,7 @@
                 </v-col>
                 <v-divider :thickness="2"/>   
             </v-row>
-            <v-row v-for="beverage in sortedBeverages" :key="beverage.id" no-gutters class="ma-1 justify-between">
+            <v-row v-for="(beverage, index) in sortedBeverages" :key="beverage.id" no-gutters class="ma-1 justify-between">
                 <v-col cols="8" class="d-flex align-center">
                     <p class="text-caption font-weight-medium">{{ beverage.name }}</p>
                 </v-col>
@@ -25,6 +25,15 @@
                 </v-col>
                 <v-col cols="2" class="d-flex align-center">
                     <p class="text-caption">{{ beverage.isUnregistered ? '-' : beverage.total + ' kr.' }}</p>
+                </v-col>
+                <v-divider :thickness="index === sortedBeverages.length - 1 ? 2 : 1" />   
+            </v-row>
+            <v-row no-gutters class="ma-1 justify-between">
+                <v-col cols="10">
+                    <p class="text-caption font-weight-black">Total:</p>
+                </v-col>
+                <v-col cols="2" class="d-flex align-center">
+                    <p class="text-caption font-weight-black">{{ totalSum }} kr.</p>
                 </v-col>
                 <v-divider/>   
             </v-row>
@@ -48,12 +57,13 @@ export default {
             scanCooldown: 2000,
             scanOrder: [],
             beverages: [
-                    { id: '5000112545326', name: 'Coca-Cola 0,33', count: 15, pant: 'a', total: 7.5 },
-                    { id: '5741000109151', name: 'Faxe Kondi 0,33', count: 8, pant: 'a', total: 4 },
-                    { id: '5740700030567', name: 'Tuborg Grøn 0,33', count: 12, pant: 'a', total: 6 },
-                    { id: '7044610874623', name: 'Carlsberg 0,33', count: 20, pant: 'a', total: 10 },
-                    { id: '5741000124123', name: 'Pepsi Max 0,5', count: 3, pant: 'b', total: 3 },
-                    { id: '5701598032002', name: 'Harboe Pilsner 0,33', count: 11, pant: 'a', total: 5.5 },
+                    { id: '5000112545326', name: 'Coca-Cola 0,33L', count: 15, pant: 'a', total: 7.5 },
+                    { id: '5741000109151', name: 'Faxe Kondi 0,33L', count: 8, pant: 'a', total: 4 },
+                    { id: '5741000129401', name: 'Faxe Kondi 1,5L', count: 2, pant: 'c', total: 6 },
+                    { id: '5740700030567', name: 'Tuborg Grøn 0,33L', count: 12, pant: 'a', total: 6 },
+                    { id: '7044610874623', name: 'Carlsberg 0,33L', count: 20, pant: 'a', total: 10 },
+                    { id: '5741000124123', name: 'Pepsi Max 0,5L', count: 3, pant: 'b', total: 3 },
+                    { id: '5701598032002', name: 'Harboe Pilsner 0,33L', count: 11, pant: 'a', total: 5.5 },
                 ]
             };
         },
@@ -69,6 +79,12 @@ export default {
                 });
                 
                 return [...scannedItems, ...unscannedItems];
+            },
+            totalSum() {
+                return this.beverages
+                    .filter(item => !item.isUnregistered && item.total !== null)
+                    .reduce((sum, item) => sum + item.total, 0)
+                    .toFixed(1);
             }
         },
         methods: {
@@ -84,14 +100,11 @@ export default {
                 const currentTime = Date.now();
                 
                 if (currentTime - this.lastScanTime < this.scanCooldown) {
-                    console.log('Scan blocked - cooldown active');
                     return;
                 }
                 
-                console.log('Decoded barcode:', text);
                 this.scannedBarcode = text;
                 this.scanCount++;
-                this.scannerStatus = 'Barcode detected!';
                 this.lastScanTime = currentTime;
                 
                 const existingItem = this.beverages.find(item => item.id === text);
@@ -118,15 +131,7 @@ export default {
                     this.beverages.push(newItem);
                     this.scanOrder.unshift(text);
                 }
-                
-                setTimeout(() => {
-                    this.scannerStatus = 'Scanner ready - point camera at barcode';
-                }, 1000);
-            },
-            onLoaded() {
-                console.log('Scanner loaded and ready');
-                this.scannerStatus = 'Scanner ready - point camera at barcode';
-            },
+            }
         }
     }
     
