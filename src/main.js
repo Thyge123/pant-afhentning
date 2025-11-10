@@ -10,6 +10,8 @@ import homePage from "./components/homePage.vue";
 import PantHistory from "./components/PantHistory.vue";
 import barcodeScanner from "./components/barcodeScanner.vue";
 import PantDetails from "./components/PantDetails.vue";
+import AfhenterPage from "./AfhenterPage.vue";
+import VejvisningPage from "./VejvisningPage.vue";
 
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
@@ -55,6 +57,16 @@ const router = createRouter({
       path: "/scan",
       name: "scan",
       component: barcodeScanner,
+    },
+    {
+      path: "/afhenter",
+      name: "Afhenter",
+      component: AfhenterPage,
+    },
+    {
+      path: "/vejvisning/:address",
+      name: "Vejvisning",
+      component: VejvisningPage,
     },
   ],
 });

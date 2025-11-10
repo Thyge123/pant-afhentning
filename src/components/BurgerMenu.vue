@@ -47,7 +47,7 @@
       <v-list-item
         prepend-icon="mdi-moped-outline"
         link
-        @click="$router.push('/')"
+        @click="$router.push('/afhenter')"
         title="Afhenter"
       >
       </v-list-item>
