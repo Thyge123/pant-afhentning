@@ -37,8 +37,22 @@
                 </v-col>
                 <v-divider/>   
             </v-row>
-        </v-container>
+        </v-container>    
     </v-container>
+    <v-footer class="w-100 bg-dark position-fixed bottom-0">
+        <v-row class="d-flex justify-space-between pa-2">
+            <v-col cols="6" class="pa-1">
+                <router-link to="/pant-history" class="text-decoration-none">
+                    <v-btn block color="primary" @click="saveScanning">Gem scanning</v-btn>
+                </router-link>
+            </v-col>
+            <v-col cols="6" class="pa-1">
+                <router-link to="/pant-history" class="text-decoration-none">
+                    <v-btn block color="secondary" @click="requestPickup">Anmod afhentning</v-btn>
+                </router-link>
+            </v-col>
+        </v-row>
+    </v-footer>
 </template>
 
 <script>
@@ -131,6 +145,12 @@ export default {
                     this.beverages.push(newItem);
                     this.scanOrder.unshift(text);
                 }
+            },
+            saveScanning() {
+                alert('Scanning gemt! Total: ' + this.totalSum + ' kr.');
+            },
+            requestPickup() {
+                alert('Afhentning anmodet! Total: ' + this.totalSum + ' kr.');
             }
         }
     }
