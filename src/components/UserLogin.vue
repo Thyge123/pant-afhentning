@@ -13,6 +13,7 @@
           :rules="emailRules"
           label="Email"
           required
+          variant="outlined"
         ></v-text-field>
 
         <v-text-field
@@ -20,6 +21,7 @@
           id="password"
           type="password"
           label="Adgangskode"
+          variant="outlined"
           :rules="passwordRules"
           required
         ></v-text-field>

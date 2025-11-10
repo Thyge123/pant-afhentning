@@ -11,7 +11,6 @@ import PantHistory from "./components/PantHistory.vue";
 import barcodeScanner from "./components/barcodeScanner.vue";
 import PantDetails from "./components/PantDetails.vue";
 
-
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import ImageBarcodeReader from "./components/barcodeScanner/ImageBarcodeReader.vue";
@@ -51,6 +50,11 @@ const router = createRouter({
       path: "/scanning/:id",
       name: "scanning",
       component: PantDetails,
+    },
+    {
+      path: "/scan",
+      name: "scan",
+      component: barcodeScanner,
     },
   ],
 });

@@ -21,10 +21,12 @@
         :items="reportReasons"
         dense
         v-model="selectedReason"
+        variant="outlined"
         return-object
       ></v-select>
       <v-textarea
         label="Yderligere kommentarer"
+        variant="outlined"
         auto-grow
         v-if="selectedReason"
         rows="1"

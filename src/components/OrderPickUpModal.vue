@@ -17,6 +17,7 @@
         :items="selectItems"
         item-title="title"
         item-value="value"
+        variant="outlined"
         dense
         v-model="selectedActivity"
         return-object

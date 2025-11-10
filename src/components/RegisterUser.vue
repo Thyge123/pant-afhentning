@@ -20,18 +20,21 @@
               v-model="firstname"
               :rules="nameRules"
               label="Fornavn"
+              variant="outlined"
               required
             ></v-text-field>
             <v-text-field
               v-model="lastname"
               :rules="nameRules"
               label="Efternavn"
+              variant="outlined"
               required
             ></v-text-field>
             <v-text-field
               v-model="birthdate"
               :rules="[]"
               label="Fødselsdato"
+              variant="outlined"
               required
               type="date"
             ></v-text-field>
@@ -41,6 +44,7 @@
               label="Email"
               required
               type="email"
+              variant="outlined"
             ></v-text-field>
           </template>
 
@@ -49,12 +53,14 @@
               v-model="city"
               :rules="cityRules"
               label="By"
+              variant="outlined"
               required
             ></v-text-field>
             <v-text-field
               v-model="zip"
               :rules="zipRules"
               label="Postnummer"
+              variant="outlined"
               required
               type="number"
             ></v-text-field>
@@ -62,16 +68,20 @@
               v-model="street"
               :rules="streetRules"
               label="Vejnavn og husnummer"
+              variant="outlined"
               required
             ></v-text-field>
           </template>
 
           <template #[`item.3`]>
             <v-text-field
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
               v-model="password"
               id="password"
-              type="password"
               label="Adgangskode"
+              variant="outlined"
+              @click:append-inner="visible = !visible"
               :rules="passwordRules"
               required
             ></v-text-field>
@@ -80,6 +90,7 @@
               id="confirmPassword"
               type="password"
               label="Bekræft Adgangskode"
+              variant="outlined"
               :rules="confirmPasswordRules"
               required
             ></v-text-field>
@@ -105,6 +116,7 @@
       return {
         step: 1,
         valid: false,
+        visible: false,
         firstname: "",
         lastname: "",
         email: "",
@@ -270,6 +282,14 @@
     box-shadow: none !important;
   }
 
+  :deep(.v-window__container) {
+    margin-top: 5px !important;
+  }
+
+  .input-fields :deep(.v-text-field) {
+    margin-bottom: 0.5rem;
+  }
+
   .image-container {
     display: flex;
     justify-content: center;
@@ -288,7 +308,7 @@
   }
 
   .input-fields {
-    margin-top: 10%;
+    margin-top: 2%;
     width: 90%;
   }
 
