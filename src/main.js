@@ -9,6 +9,7 @@ import { loadFonts } from "./plugins/webfontloader";
 import RegisterUser from "./components/RegisterUser.vue";
 import UserLogin from "./components/UserLogin.vue";
 import PantHistory from "./components/PantHistory.vue";
+import PantDetails from "./components/PantDetails.vue";
 
 loadFonts();
 
@@ -37,6 +38,11 @@ const router = createRouter({
       path: "/min-pant",
       name: "PantHistory",
       component: PantHistory,
+    },
+    {
+      path: "/scanning/:id",
+      name: "scanning",
+      component: PantDetails,
     },
   ],
 });

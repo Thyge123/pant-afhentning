@@ -82,17 +82,22 @@
         </v-col>
       </v-row>
     </v-container>
+    <OrderPickUpButton @open-dialog="dialog = true" />
+    <OrderPickUpModal v-model="dialog" @close-dialog="dialog = false" />
   </v-container>
 </template>
 
 <script>
   //import PantHistory from "./PantHistory.vue";
+  import OrderPickUpButton from "./OrderPickUpButton.vue";
+  import OrderPickUpModal from "./OrderPickUpModal.vue";
   export default {
     inject: ["activities", "statusMap", "getStatusColor"],
-    //components: { PantHistory },
+    components: { OrderPickUpButton, OrderPickUpModal },
     data() {
       return {
         showMore: false,
+        dialog: false,
       };
     },
   };
