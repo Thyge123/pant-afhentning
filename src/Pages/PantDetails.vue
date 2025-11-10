@@ -83,8 +83,8 @@
 </template>
 
 <script>
-  import BugReportButton from "./BugReportButton.vue";
-  import ReportModal from "./ReportModal.vue";
+  import BugReportButton from "../components/BugReportButton.vue";
+  import ReportModal from "../components/ReportModal.vue";
   export default {
     name: "PantScanDetails",
     components: {

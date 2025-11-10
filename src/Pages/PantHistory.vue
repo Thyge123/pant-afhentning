@@ -1,7 +1,11 @@
 <template>
   <div class="pant-history">
+    <v-card-text class="text-center" v-if="isLoading">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+      <p class="mt-4">Indlæser detaljer...</p>
+    </v-card-text>
     <!--<h2>Min pant</h2>-->
-    <v-card>
+    <v-card v-if="!isLoading">
       <div>
         <p class="pant-history-link" v-if="ShowMoreLink">
           <router-link to="/min-pant" class="see-all-link">
@@ -52,6 +56,13 @@
                     <span class="item-type">{{ item.type }}</span>
                     <span class="item-quantity">{{ item.quantity }} stk.</span>
                   </div>
+                  <v-btn
+                    @click="ViewMore"
+                    size="small"
+                    variant="text"
+                    color="#009fe4"
+                    >Vis mere</v-btn
+                  >
                 </div>
               </td>
             </tr>
@@ -97,6 +108,7 @@
       return {
         selectedRow: null,
         expandRow: false,
+        isLoading: false,
         /*
         pantHistory: [
           {
@@ -205,6 +217,12 @@
         this.selectedRow = null;
         this.expandRow = false;
       },
+      ViewMore() {
+        const selectedActivity = this.activities[this.selectedRow];
+        if (selectedActivity && selectedActivity.id) {
+          this.$router.push(`/scanning/${selectedActivity.id}`);
+        }
+      },
     },
   };
 </script>
@@ -256,6 +274,11 @@
     gap: 12px;
     font-size: 0.75rem;
     padding: 2px 0;
+  }
+
+  .view-more-container {
+    text-align: right;
+    margin-top: 8px;
   }
 
   .item-type {

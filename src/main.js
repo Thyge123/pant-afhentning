@@ -3,15 +3,15 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
 
-import RegisterUser from "./components/RegisterUser.vue";
-import UserLogin from "./components/UserLogin.vue";
+import RegisterUser from "./Pages/RegisterUser.vue";
+import UserLogin from "./Pages/UserLogin.vue";
 
-import homePage from "./components/homePage.vue";
-import PantHistory from "./components/PantHistory.vue";
-import barcodeScanner from "./components/barcodeScanner.vue";
-import PantDetails from "./components/PantDetails.vue";
-import AfhenterPage from "./AfhenterPage.vue";
-import VejvisningPage from "./VejvisningPage.vue";
+import HomePage from "./Pages/HomeView.vue";
+import PantHistory from "./Pages/PantHistory.vue";
+import barcodeScanner from "./Pages/barcodeScanner.vue";
+import PantDetails from "./Pages/PantDetails.vue";
+import AfhenterPage from "./Pages/AfhenterPage.vue";
+import VejvisningPage from "./Pages/VejvisningPage.vue";
 
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
@@ -31,7 +31,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: homePage,
+      component: HomePage,
     },
     {
       path: "/register",
@@ -72,8 +72,5 @@ const router = createRouter({
 });
 
 const app = createApp(App);
-
-app.component("home-page", homePage);
-app.component("barcode-scanner", barcodeScanner);
 
 app.use(vuetify).use(router).mount("#app");

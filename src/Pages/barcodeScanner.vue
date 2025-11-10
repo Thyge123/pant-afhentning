@@ -73,7 +73,7 @@
 </template>
 
 <script>
-  import StreamBarcodeReader from "./barcodeScanner/StreamBarcodeReader.vue";
+  import StreamBarcodeReader from "../components/barcodeScanner/StreamBarcodeReader.vue";
 
   export default {
     components: {

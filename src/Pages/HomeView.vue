@@ -89,8 +89,8 @@
 
 <script>
   //import PantHistory from "./PantHistory.vue";
-  import OrderPickUpButton from "./OrderPickUpButton.vue";
-  import OrderPickUpModal from "./OrderPickUpModal.vue";
+  import OrderPickUpButton from "../components/OrderPickUpButton.vue";
+  import OrderPickUpModal from "../components/OrderPickUpModal.vue";
   export default {
     inject: ["activities", "statusMap", "getStatusColor"],
     components: { OrderPickUpButton, OrderPickUpModal },
