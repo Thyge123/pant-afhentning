@@ -9,6 +9,7 @@ import UserLogin from "./components/UserLogin.vue";
 import homePage from "./components/homePage.vue";
 import PantHistory from "./components/PantHistory.vue";
 import barcodeScanner from "./components/barcodeScanner.vue";
+import PantDetails from "./components/PantDetails.vue";
 
 
 import vuetify from "./plugins/vuetify";
@@ -22,7 +23,15 @@ loadFonts();
 // Navigation guards or additional router configuration can go here
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  scrollBehavior() {
+    return { top: 0 };
+  },
   routes: [
+    {
+      path: "/",
+      name: "home",
+      component: homePage,
+    },
     {
       path: "/register",
       name: "RegisterUser",
@@ -34,19 +43,14 @@ const router = createRouter({
       component: UserLogin,
     },
     {
-      path: '/',
-      name: 'home',
-      component: homePage,
-    },
-    {
-      path: "/pant-history",
+      path: "/min-pant",
       name: "PantHistory",
       component: PantHistory,
     },
     {
-      path: '/scan',
-      name: 'scan',
-      component: barcodeScanner,
+      path: "/scanning/:id",
+      name: "scanning",
+      component: PantDetails,
     },
   ],
 });

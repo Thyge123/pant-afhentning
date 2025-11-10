@@ -40,7 +40,7 @@
       <v-list-item
         prepend-icon="mdi-history"
         link
-        @click="$router.push('/pant-history')"
+        @click="$router.push('/min-pant')"
         title="Pant Historik"
       >
       </v-list-item>
@@ -55,7 +55,7 @@
       <v-list-item
         prepend-icon="mdi-logout"
         link
-        @click="$router.push('/')"
+        @click="logout"
         title="Log Ud"
         class="log-out"
       >
@@ -90,6 +90,7 @@
         default: false,
       },
     },
+    emits: ["toggle-menu"],
     data() {
       return {
         isOpenLocal: this.isOpen,
@@ -100,6 +101,10 @@
     methods: {
       toggleMenu() {
         this.isOpenLocal = !this.isOpenLocal;
+      },
+      logout() {
+        this.isOpenLocal = false;
+        this.$router.push("/login");
       },
     },
     watch: {

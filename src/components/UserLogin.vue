@@ -97,7 +97,7 @@
           password: this.password,
         };
         console.log("User Data:", userData);
-        this.$router.push("/dashboard");
+        this.$router.push("/");
       },
     },
   };
