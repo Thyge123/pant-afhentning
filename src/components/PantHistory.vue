@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="(entry, index) in ProcessedPantHistory" :key="index">
+          <template v-for="(entry, index) in activities" :key="index">
             <tr
               @click="selectRow(index)"
               class="clickable-row"
@@ -35,11 +35,11 @@
               <td>{{ entry.date }}</td>
               <td>
                 <v-chip :color="getStatusColor(entry.status)" label small>
-                  {{ entry.status }}
+                  {{ statusMap[entry.status] }}
                 </v-chip>
               </td>
               <td>{{ entry.amount }}</td>
-              <td>{{ entry.totalPrice }}</td>
+              <td>{{ entry.price }}</td>
             </tr>
             <tr v-if="selectedRow === index && expandRow && entry.items">
               <td colspan="5" class="expanded-details">
@@ -92,10 +92,12 @@
         default: false,
       },
     },
+    inject: ["activities"],
     data() {
       return {
         selectedRow: null,
         expandRow: false,
+        /*
         pantHistory: [
           {
             date: "2024-01-01",
@@ -125,21 +127,23 @@
             ],
           },
         ],
+        */
+        statusMap: {
+          1: "Gemt",
+          2: "Afhenter",
+          3: "Afhentet",
+          4: "Afsluttet",
+        },
       };
     },
     computed: {
       totalAmount() {
-        return this.ProcessedPantHistory.reduce(
-          (sum, entry) => sum + entry.amount,
-          0
-        );
+        return this.activities.reduce((sum, entry) => sum + entry.amount, 0);
       },
       totalPrice() {
-        return this.ProcessedPantHistory.reduce(
-          (sum, entry) => sum + entry.totalPrice,
-          0
-        );
+        return this.activities.reduce((sum, entry) => sum + entry.price, 0);
       },
+      /*
       ProcessedPantHistory() {
         // Definer hvor meget hver pant type er værd
         const pantValues = {
@@ -171,15 +175,16 @@
           };
         });
       },
+      */
     },
     methods: {
       getStatusColor(status) {
         switch (status) {
-          case "Afsluttet":
+          case 1:
             return "green-darken-1";
-          case "Afhentet":
+          case 2:
             return "orange-darken-1";
-          case "Gemt":
+          case 3:
             return "blue-darken-1";
           default:
             return "grey";
@@ -280,5 +285,10 @@
   .see-all-link .v-icon {
     vertical-align: middle;
     margin-left: 2px;
+  }
+
+  .v-chip {
+    width: -webkit-fill-available;
+    place-content: center;
   }
 </style>
