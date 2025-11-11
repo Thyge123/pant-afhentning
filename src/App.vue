@@ -6,17 +6,23 @@
         :is-open="isMenuOpen"
         @toggle-menu="isMenuOpen = $event"
       />
+      <NavigationHeader />
       <router-view />
+      <BottomMenuBar />
     </v-main>
   </v-app>
 </template>
 
 <script>
   import BurgerMenu from "./components/BurgerMenu.vue";
+  import BottomMenuBar from "./components/BottomMenuBar.vue";
+  import NavigationHeader from "./components/NavigationHeader.vue";
   export default {
     name: "App",
     components: {
       BurgerMenu,
+      BottomMenuBar,
+      NavigationHeader,
     },
     data: () => ({
       isMenuOpen: false,

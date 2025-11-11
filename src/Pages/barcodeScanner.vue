@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-2">
+  <v-container class="pa-2 scanner-page">
     <v-container class="pa-0" fluid>
       <StreamBarcodeReader
         @decode="onDecode"
@@ -7,7 +7,7 @@
         @result="onResult"
       ></StreamBarcodeReader>
     </v-container>
-    <v-container>
+    <v-container class="pb-16">
       <v-row no-gutters class="ma-1 justify-between">
         <v-col cols="8" class="d-flex-row align-center">
           <p class="text-overline font-weight-bold">Navn</p>
@@ -52,7 +52,7 @@
       </v-row>
     </v-container>
   </v-container>
-  <v-footer class="w-100 bg-dark position-fixed bottom-0">
+  <v-footer class="scanner-footer">
     <v-row class="d-flex justify-space-between pa-2">
       <v-col cols="6" class="pa-1">
         <router-link to="/min-pant" class="text-decoration-none">
@@ -219,3 +219,17 @@
     },
   };
 </script>
+
+<style scoped>
+  .scanner-page {
+    padding-bottom: 180px;
+  }
+
+  .scanner-footer {
+    position: fixed;
+    bottom: 75px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+</style>
