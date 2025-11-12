@@ -12,6 +12,7 @@ import barcodeScanner from "./Pages/barcodeScanner.vue";
 import PantDetails from "./Pages/PantDetails.vue";
 import AfhenterPage from "./Pages/AfhenterPage.vue";
 import VejvisningPage from "./Pages/VejvisningPage.vue";
+import MyProfile from "./Pages/MyProfile.vue";
 
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
@@ -67,6 +68,11 @@ const router = createRouter({
       path: "/vejvisning/:address",
       name: "Vejvisning",
       component: VejvisningPage,
+    },
+    {
+      path: "/min-profil",
+      name: "MyProfile",
+      component: MyProfile,
     },
   ],
 });

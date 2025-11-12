@@ -27,6 +27,5 @@
   .v-card {
     cursor: pointer;
     width: 45%;
-    margin-top: 10%;
   }
 </style>

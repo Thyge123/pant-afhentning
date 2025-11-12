@@ -24,14 +24,14 @@
       <v-row class="">
         <v-col class="pa-0 ga-4">
           <h3>Seneste aktivitet</h3>
-          <!--
+
           <PantHistory
             :IsPriceHidden="true"
             :IsAmountHidden="true"
-            :IsExpandable="false"
+            :IsExpandable="true"
             :ShowMoreLink="true"
           />
-          -->
+          <!--
           <v-card class="align-center pa-2" elevation="5">
             <v-row
               v-for="(activity, index) in showMore
@@ -79,6 +79,7 @@
               </v-col>
             </v-row>
           </v-card>
+          -->
         </v-col>
       </v-row>
     </v-container>
@@ -91,9 +92,10 @@
   //import PantHistory from "./PantHistory.vue";
   import OrderPickUpButton from "../components/OrderPickUpButton.vue";
   import OrderPickUpModal from "../components/OrderPickUpModal.vue";
+  import PantHistory from "../Pages/PantHistory.vue";
   export default {
     inject: ["activities", "statusMap", "getStatusColor"],
-    components: { OrderPickUpButton, OrderPickUpModal },
+    components: { OrderPickUpButton, OrderPickUpModal, PantHistory },
     data() {
       return {
         showMore: false,

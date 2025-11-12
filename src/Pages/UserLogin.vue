@@ -1,11 +1,9 @@
 <template>
   <div class="login-user">
-    <div class="image-container">
-      <div class="image">
-        <img :src="imageURL" alt="Dansk Retursystem Logo" />
-      </div>
+    <LogoBanner />
+    <div>
+      <h2>Login til Pant Afhentning</h2>
     </div>
-
     <div class="input-fields">
       <v-form v-model="valid">
         <v-text-field
@@ -43,17 +41,18 @@
 </template>
 
 <script>
+  import LogoBanner from "@/components/LogoBanner.vue";
   export default {
     name: "UserLogin",
+    components: {
+      LogoBanner,
+    },
     data() {
       return {
         valid: false,
 
         email: "",
         password: "",
-
-        imageURL:
-          "https://www.greatplacetowork.dk/images/Arbejdspladsprofiler/Dansk-Retursystem/Dansk-Retursystem-logo-profil.webp",
 
         emailRules: [
           (value) => {
@@ -111,23 +110,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-
-  .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    background-color: #d9d9d9;
-    width: 100%;
-    padding: 10px;
-    height: 200px;
-  }
-
-  .image img {
-    width: 300px;
-    object-fit: contain;
-    height: auto;
   }
 
   .input-fields {
