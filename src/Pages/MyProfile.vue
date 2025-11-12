@@ -78,12 +78,11 @@
       <v-card-text class="pa-4">
         <v-list>
           <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Notifikationer</v-list-item-title>
-              <v-list-item-subtitle
-                >Modtag opdateringer om dine scanninger</v-list-item-subtitle
-              >
-            </v-list-item-content>
+            <v-list-item-title>Notifikationer</v-list-item-title>
+            <v-list-item-subtitle
+              >Modtag opdateringer om dine scanninger</v-list-item-subtitle
+            >
+
             <v-list-item-action>
               <v-switch color="primary" v-model="notifications"></v-switch>
             </v-list-item-action>

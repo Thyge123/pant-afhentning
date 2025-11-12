@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="auto">
+  <v-dialog width="auto" transition="dialog-bottom-transition">
     <v-card
       prepend-icon="mdi-truck-fast"
       text="Vælg hvilken aktivitet du ønsker at anmode om afhentning for."
