@@ -33,6 +33,7 @@
           "/scan": "Scanner",
           "/min-pant": "Min Pant",
           "/profil": "Min Profil",
+          "/afhenter": "Afhenter",
         };
 
         // Check if current path starts with any of the keys

@@ -5,13 +5,13 @@
     </div>
     <div class="register-user" v-else>
       <LogoBanner />
-      <div>
-        <h2>Opret Bruger Til Pant Afhentning</h2>
-      </div>
+      <h2>Opret bruger til Pant Afhentning</h2>
       <div class="input-fields">
         <v-form v-model="valid">
           <v-stepper
             v-model="step"
+            prev-text="Tilbage"
+            next-text="Næste"
             :items="['Personlig Info', 'Adresse', 'Sikkerhed']"
             alt-labels
           >
@@ -317,6 +317,11 @@
   */
   :deep(.v-stepper-header) {
     box-shadow: none !important;
+    width: 100% !important;
+  }
+
+  :deep(.v-stepper--alt-labels) .v-stepper-item {
+    flex-basis: 0;
   }
 
   :deep(.v-window__container) {
@@ -330,6 +335,11 @@
   .input-fields {
     margin-top: 2%;
     width: 90%;
+  }
+
+  :deep(.v-stepper-window) {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
   }
 
   button {

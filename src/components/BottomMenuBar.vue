@@ -6,25 +6,25 @@
     </v-btn>
 
     <v-btn value="history" @click="$router.push('/min-pant')">
-      <v-icon>mdi-history</v-icon>
+      <v-icon>mdi-recycle-variant</v-icon>
       <span>Min Pant</span>
     </v-btn>
 
     <v-btn value="delivery" @click="$router.push('/afhenter')" variant="text">
-      <v-icon>mdi-moped-outline</v-icon>
+      <v-icon>mdi-truck-fast</v-icon>
       <span>Afhenter</span>
     </v-btn>
 
     <v-btn value="profile" @click="$router.push('/min-profil')">
       <v-icon>mdi-account</v-icon>
-      <span>Min Profil</span>
+      <span>Profil</span>
     </v-btn>
   </v-bottom-navigation>
 
   <v-fab
     v-if="!isOnScannerPage && !isOnLoginPage"
     class="centered-fab"
-    icon="mdi-qrcode-scan"
+    icon="mdi-barcode-scan"
     @click="$router.push('/scan')"
   ></v-fab>
 </template>

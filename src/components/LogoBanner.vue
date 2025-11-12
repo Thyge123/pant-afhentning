@@ -23,15 +23,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     background-color: #d9d9d9;
     width: 100%;
     padding: 10px;
-    height: 10rem;
+    height: 6rem;
   }
 
   .image img {
-    width: 250px;
+    width: 150px;
     object-fit: contain;
     height: auto;
   }
