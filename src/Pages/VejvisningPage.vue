@@ -2,27 +2,33 @@
   <section class="vejvisning">
     <header class="header-title">Vejvisning</header>
 
-   
     <section class="map-container">
       <p class="address-label">Adresse:</p>
-      <p class="address">66 Perry St</p>
+      <p class="address">{{ address }}</p>
 
       <!-- Her vises billedet -->
-      <img :src="kortImage" alt="Kortvejvisning" class="map-image">
+      <img :src="kortImage" alt="Kortvejvisning" class="map-image" />
     </section>
   </section>
 </template>
 
 <script>
-import kortImage from '@/assets/kort.png';
+import kortImage from "@/assets/kort.png";
 
 export default {
   name: "VejvisningView",
   data() {
     return {
-      kortImage
+      kortImage,
+      address: null,
     };
-  }
+  },
+  methods: {},
+  mounted() {
+    // Eventuel initialisering kan ske her
+    const address = this.$route.params.address;
+    this.address = address;
+  },
 };
 </script>
 
@@ -51,14 +57,13 @@ export default {
   align-items: center;
 }
 
-
 .map-container {
   background: white;
   margin-top: 16px;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
-   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3)
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 .address-label {
@@ -74,8 +79,7 @@ export default {
   padding: 4px 8px;
   border-radius: 4px;
   margin-bottom: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3)
-
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 .map-image {
