@@ -2,7 +2,7 @@
   <section class="app">
     <header class="header-title">Afhenter</header>
 
-    <section class="panel">
+    <section class="afhentning">
       <h3>Pant til afhentning</h3>
       <table>
         <thead>
@@ -53,7 +53,7 @@
       </table>
     </section>
 
-    <section class="panel">
+    <section class="hentet">
       <h3>Pant allerede hentet</h3>
       <table>
         <thead>
@@ -152,9 +152,10 @@
 </script>
 
 <style scoped>
+
   .app {
-    background: #111;
-    color: #ddd;
+    background: white;
+    color: #333;
     padding: 20px;
     font-family: Arial, sans-serif;
   }
@@ -164,6 +165,7 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 14px;
+    color: black;
   }
 
   .topbar {
@@ -175,54 +177,92 @@
     align-items: center;
   }
 
-  .menu-btn {
-    background: #777;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    color: white;
-    font-size: 18px;
-  }
 
-  .panel {
-    background: #ddd;
+  .afhentning,
+  .hentet {
+    background: white;
     color: #333;
     border-radius: 12px;
     padding: 10px;
     margin-top: 14px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
   }
-  .panel h3 {
+
+  .afhentning h3,
+  .hentet h3 {
     margin: 4px 0 10px;
     font-size: 16px;
     font-weight: bold;
   }
 
-  table {
+
+  .afhentning table,
+  .hentet table {
     width: 100%;
-    border-collapse: collapse;
     font-size: 13px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
+
   th,
   td {
     padding: 6px;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #eee;
+    background: #fff; /* gør felterne hvide med let skygge omkring tabellen */
   }
+
+  tfoot td {
+    background: #ffffff;
+    font-weight: bold;
+  }
+
   th {
-    background: #eee;
     text-align: left;
+    font-weight: 600;
   }
+
   td.right,
   th.right {
     text-align: right;
   }
-  tfoot td {
-    background: #eee;
-    font-weight: bold;
+
+  .afhentning h3 { color: red; }
+  .hentet h3 { color: green; }
+
+ 
+  .afhentning thead th:nth-child(1),
+  .afhentning thead th:nth-child(2),
+  .afhentning thead th:nth-child(3) {
+    color: red;
   }
 
-  tbody tr:hover {
-    background: #ccc;
-    cursor: pointer;
+  .hentet thead th:nth-child(1),
+  .hentet thead th:nth-child(2),
+  .hentet thead th:nth-child(3),
+  .hentet thead th:nth-child(4) {
+    color: green;
+  }
+
+  
+  .afhentning tbody td:nth-child(1),
+  .afhentning tbody td:nth-child(2),
+  .afhentning tbody td:nth-child(3) {
+    color: red;
+  }
+
+  .hentet tbody td:nth-child(1),
+  .hentet tbody td:nth-child(2),
+  .hentet tbody td:nth-child(3),
+  .hentet tbody td:nth-child(4) {
+    color: green;
+  }
+
+ 
+  .afhentning tfoot td {
+    color: red;
+  }
+
+  .hentet tfoot td {
+    color: green;
   }
 </style>
