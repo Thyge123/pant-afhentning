@@ -91,12 +91,10 @@
           <v-divider></v-divider>
 
           <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Email påmindelser</v-list-item-title>
-              <v-list-item-subtitle
-                >Få email når pant er klar til afhentning</v-list-item-subtitle
-              >
-            </v-list-item-content>
+            <v-list-item-title>Email påmindelser</v-list-item-title>
+            <v-list-item-subtitle
+              >Få email når pant er klar til afhentning</v-list-item-subtitle
+            >
             <v-list-item-action>
               <v-switch color="primary" v-model="emailReminders"></v-switch>
             </v-list-item-action>
@@ -112,52 +110,52 @@
 </template>
 
 <script>
-  export default {
-    name: "MyProfile",
-    inject: ["activities"],
-    data() {
-      return {
-        notifications: true,
-        emailReminders: false,
-      };
+export default {
+  name: "MyProfile",
+  inject: ["activities"],
+  data() {
+    return {
+      notifications: true,
+      emailReminders: false,
+    };
+  },
+  computed: {
+    totalPrice() {
+      return this.activities.reduce((sum, entry) => sum + entry.price, 0);
     },
-    computed: {
-      totalPrice() {
-        return this.activities.reduce((sum, entry) => sum + entry.price, 0);
-      },
-    },
-  };
+  },
+};
 </script>
 
 <style scoped>
-  .profile-section {
-    margin-bottom: 16px;
-  }
+.profile-section {
+  margin-bottom: 16px;
+}
 
-  .info-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
+.info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
-  .info-item {
-    flex: 1 1 calc(50% - 20px);
-    min-width: 200px;
-  }
+.info-item {
+  flex: 1 1 calc(50% - 20px);
+  min-width: 200px;
+}
 
-  .stats-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
-  .stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 16px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-    min-width: 150px;
-  }
+.stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  min-width: 150px;
+}
 </style>

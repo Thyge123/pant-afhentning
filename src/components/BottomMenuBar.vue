@@ -47,67 +47,69 @@
 </template>
 
 <script>
-  export default {
-    name: "BottomMenuBar",
+export default {
+  name: "BottomMenuBar",
 
-    computed: {
-      isOnScannerPage() {
-        return this.$route.path === "/scan";
-      },
-      isOnLoginPage() {
-        const loginPaths = ["/login", "/register"];
-        return loginPaths.includes(this.$route.path);
-      },
+  computed: {
+    isOnScannerPage() {
+      return this.$route.path === "/scan";
     },
-  };
+    isOnLoginPage() {
+      const loginPaths = ["/login", "/register"];
+      return loginPaths.includes(this.$route.path);
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .fade-in {
-    animation: fadeIn 0.5s ease-in;
-  }
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  .v-bottom-navigation {
-    height: 70px !important;
+  to {
+    opacity: 1;
   }
+}
+.v-bottom-navigation {
+  height: 70px !important;
+  border-radius: 10px 10px 0px 0px !important;
+}
 
-  .v-icon {
-    font-size: 30px !important;
-    color: #707070de !important;
-  }
+.v-icon {
+  font-size: 30px !important;
+  color: #707070de !important;
+}
 
-  .centered-fab {
-    position: fixed !important;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999 !important;
-  }
+.centered-fab {
+  position: fixed !important;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999 !important;
+}
 
-  .active-nav {
-    background-color: rgba(147, 193, 78, 0.1) !important;
-  }
+.active-nav {
+  background-color: rgba(147, 193, 78, 0.1) !important;
+  border-radius: 10px 10px 0px 0px !important;
+}
 
-  .active-nav .v-icon {
-    color: #93c14e !important;
-    animation: bounce 0.3s ease;
-  }
+.active-nav .v-icon {
+  color: #93c14e !important;
+  animation: bounce 0.3s ease;
+}
 
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-5px);
-    }
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-5px);
+  }
+}
 </style>
