@@ -1,7 +1,5 @@
 <template>
   <section class="vejvisning">
-    <header class="header-title">Vejvisning</header>
-
     <section class="map-container">
       <p class="address-label">Adresse:</p>
       <p class="address">{{ address }}</p>
