@@ -41,14 +41,12 @@
               v-for="(item, index) in activityDetails.items"
               :key="index"
             >
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.type }} - {{ item.quantity }} stk.
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  Pant: {{ item.pant }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
+              <v-list-item-title>
+                {{ item.type }} - {{ item.quantity }} stk.
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Pant: {{ item.pant }}
+              </v-list-item-subtitle>
             </v-list-item>
           </v-list>
 

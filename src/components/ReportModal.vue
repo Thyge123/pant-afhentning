@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    :model-value="modelValue"
-    @update:model-value="closeDialog"
-    width="auto"
-  >
+  <v-dialog width="auto" transition="dialog-bottom-transition">
     <v-card
       prepend-icon="mdi-alert"
       text="Er der sket en fejl ved registreringen af pant?"
