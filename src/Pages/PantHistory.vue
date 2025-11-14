@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-0 pant-history">
+  <div class="pa-2 pt-3 pant-history">
     <v-card-text class="text-center" v-if="isLoading">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
       <p class="mt-4">Indlæser detaljer...</p>
@@ -32,32 +32,50 @@
               </td>
               <!-- <td>{{ entry.amount }}</td> -->
               <td>{{ entry.price }}</td>
-              <td v-if="selectedRow !== index && IsExpandable">
+              <td v-if="selectedRow !== index && IsExpandable" class="d-flex justify-end align-center">
                 <v-icon icon="mdi mdi-chevron-down" size="x-small"></v-icon>
               </td>
-              <td v-else-if="IsExpandable">
+              <td v-else-if="IsExpandable" class="d-flex justify-end align-center">
                 <v-icon icon="mdi mdi-chevron-up" size="x-small"></v-icon>
               </td>
             </tr>
             <tr v-if="selectedRow === index && expandRow && entry.items">
-              <td colspan="5" class="expanded-details">
-                <div class="items-grid">
-                  <div
+              <td colspan="5" class="">
+                <v-container class="pa-1 py-4">
+                  <v-row
+                    class="pa-0 px-2"
                     v-for="(item, i) in entry.items"
                     :key="i"
-                    class="item-row"
                   >
-                    <span class="item-type">{{ item.type }}</span>
-                    <span class="item-quantity">{{ item.quantity }} stk.</span>
-                  </div>
-                  <v-btn
-                    @click="ViewMore"
-                    size="small"
-                    variant="text"
-                    color="#009fe4"
-                    >Vis alle detaljer</v-btn
-                  >
-                </div>
+                  <v-col class="pa-0 d-flex jusify-space-between">
+                    <p class="w-50 text-caption">{{ item.type }}</p>
+                    <p class="w-50 text-caption text-end">{{ item.quantity }} stk.</p>
+                  </v-col>
+                  </v-row>
+                  <v-row class="pa-0 py-1">
+                    <v-col class="pa-0">
+                      <v-divider/>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pa-0 px-2">
+                    <v-col class="pa-0 d-flex justify-space-between">
+                      <p class="w-50 text-caption font-weight-medium">Ialt:</p>
+                      <p class="w-50 text-caption font-weight-medium text-end">60 stk.</p>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pa-0">
+                    <v-col class="pa-0 pt-1 d-flex justify-center">
+                      <v-btn
+                        @click="ViewMore"
+                        size="small"
+                        variant="text"
+                        color="#009fe4"
+                      >
+                        Vis alle detaljer
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </td>
             </tr>
           </template>
@@ -73,11 +91,9 @@
         </tbody>
         <tfoot v-if="!IsPriceHidden && !IsAmountHidden">
           <tr>
-            <td class="font-weight-bold">Total:</td>
-            <td></td>
+            <td colspan="2" class="font-weight-bold">Total:</td>
             <!-- <td class="font-weight-bold">{{ totalAmount }}</td> -->
-            <td class="font-weight-bold">{{ totalPrice }}</td>
-            <td v-if="IsExpandable"></td>
+            <td colspan="2" class="font-weight-bold">{{ totalPrice }}</td>
           </tr>
         </tfoot>
       </v-table>
@@ -263,8 +279,6 @@
 
   .expanded-details {
     background-color: #fafafa;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 8px 16px;
   }
 
   .items-grid {
@@ -275,6 +289,7 @@
 
   .item-row {
     display: grid;
+    justify-content: space-between;
     grid-template-columns: 1fr auto auto;
     gap: 12px;
     font-size: 0.75rem;
