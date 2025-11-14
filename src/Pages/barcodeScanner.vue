@@ -36,7 +36,7 @@
         </v-col>
         <v-col cols="2" class="d-flex align-center">
           <p class="text-caption">
-            {{ beverage.isUnregistered ? "-" : beverage.total + " kr." }}
+            {{ beverage.isUnregistered ? "-" : (beverageTotals[beverage.id] + " kr.") }}
           </p>
         </v-col>
         <v-divider :thickness="index === sortedBeverages.length - 1 ? 2 : 1" />
@@ -52,32 +52,19 @@
       </v-row>
     </v-container>
   </v-container>
-  <v-footer class="scanner-footer">
-    <v-row class="d-flex justify-space-between pa-2">
-      <v-col cols="6" class="pa-1">
-        <router-link to="/min-pant" class="text-decoration-none">
-          <v-btn block color="primary" @click="saveScanning"
-            >Gem scanning</v-btn
-          >
-        </router-link>
-      </v-col>
-      <v-col cols="6" class="pa-1">
-        <router-link to="/min-pant" class="text-decoration-none">
-          <v-btn block color="secondary" @click="requestPickup"
-            >Anmod afhentning</v-btn
-          >
-        </router-link>
-      </v-col>
-    </v-row>
+  <v-footer elevation="20" class="scanner-footer bg-white">
+    <dialogTemplate :totalSum="totalSum"/>
   </v-footer>
 </template>
 
 <script>
   import StreamBarcodeReader from "../components/barcodeScanner/StreamBarcodeReader.vue";
+  import dialogTemplate from "@/components/scannerDialog.vue/dialogTemplate.vue";
 
   export default {
     components: {
       StreamBarcodeReader,
+      dialogTemplate,
     },
     data() {
       return {
@@ -93,49 +80,48 @@
             name: "Coca-Cola 0,33L",
             count: 15,
             pant: "a",
-            total: 7.5,
+           
+
           },
           {
             id: "5741000109151",
             name: "Faxe Kondi 0,33L",
             count: 8,
             pant: "a",
-            total: 4,
           },
           {
             id: "5741000129401",
             name: "Faxe Kondi 1,5L",
-            count: 2,
+            count: 5,
             pant: "c",
-            total: 6,
+
           },
           {
             id: "5740700030567",
             name: "Tuborg Grøn 0,33L",
             count: 12,
             pant: "a",
-            total: 6,
+
           },
           {
             id: "7044610874623",
             name: "Carlsberg 0,33L",
             count: 20,
             pant: "a",
-            total: 10,
+
           },
           {
             id: "5741000124123",
             name: "Pepsi Max 0,5L",
-            count: 3,
+            count: 10,
             pant: "b",
-            total: 3,
+
           },
           {
             id: "5701598032002",
             name: "Harboe Pilsner 0,33L",
-            count: 11,
+            count: 13,
             pant: "a",
-            total: 5.5,
           },
         ],
       };
@@ -157,18 +143,24 @@
 
         return [...scannedItems, ...unscannedItems];
       },
+      beverageTotals() {
+        return this.beverages.reduce((totals, beverage) => {
+          totals[beverage.id] = beverage.isUnregistered ? 0 : (beverage.count * this.getPantPrice(beverage.pant));
+          return totals;
+        }, {});
+      },
       totalSum() {
         return this.beverages
-          .filter((item) => !item.isUnregistered && item.total !== null)
-          .reduce((sum, item) => sum + item.total, 0)
+          .filter((item) => !item.isUnregistered)
+          .reduce((sum, item) => sum + (item.count * this.getPantPrice(item.pant)), 0)
           .toFixed(1);
       },
     },
     methods: {
       getPantPrice(pantType) {
         const pantPrices = {
-          a: 0.5,
-          b: 1.0,
+          a: 1.0,
+          b: 1.5,
           c: 3.0,
         };
         return pantPrices[pantType] || 0;
@@ -222,12 +214,13 @@
 
 <style scoped>
   .scanner-page {
-    padding-bottom: 180px;
+    padding-bottom: 170px;
   }
 
   .scanner-footer {
     position: fixed;
-    bottom: 75px;
+    width: 100%;
+    bottom: 70px;
     left: 0;
     right: 0;
     z-index: 999;
