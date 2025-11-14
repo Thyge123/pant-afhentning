@@ -1,4 +1,4 @@
-# 🇩🇰 Pant-Afhentning
+# Pant-Afhentning
 
 En mobil-først webapplikation bygget med Vue.js og Vuetify til håndtering af pant-scanning og anmodning om afhentning.
 
@@ -115,9 +115,6 @@ Komponenter som `PantHistory.vue`, `PantDetails.vue`, `MyProfile.vue` og `OrderP
 
 Dette er en oversigt over applikationens primære sider og genbrugelige komponenter.
 
-\<details\>
-\<summary\>\<strong\>Klik for at se Sider (Pages)\</strong\>\</summary\>
-
 **`HomeView.vue`**
 
   * **Rute:** `/`
@@ -211,8 +208,6 @@ Dette er en oversigt over applikationens primære sider og genbrugelige komponen
 
   * **Formål:** Footer-menu på `barcodeScanner.vue` til at afslutte en scanning.
   * **Logik:** Viser "Gem scanning" og "Anmod afhentning". Hvis brugeren anmoder om afhentning og `totalSum` er under 100 kr., vises en advarselsdialog (`dialog2`), der informerer om minimumsbeløbet.
-
-\</details\>
 
 -----
 
