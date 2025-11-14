@@ -1,80 +1,99 @@
 <template>
-  <div class="pant-history">
+  <div class="pa-2 pt-3 pant-history">
     <v-card-text class="text-center" v-if="isLoading">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
       <p class="mt-4">Indlæser detaljer...</p>
     </v-card-text>
     <!--<h2>Min pant</h2>-->
-    <v-card v-if="!isLoading">
-      <div>
-        <p class="pant-history-link" v-if="ShowMoreLink">
-          <router-link to="/min-pant" class="see-all-link">
-            Mere<v-icon icon="mdi mdi-arrow-right" size="x-small"></v-icon
-          ></router-link>
-        </p>
-      </div>
-      <v-table>
+    <v-card elevation="3" v-if="!isLoading">
+      <v-table class="w-100">
         <thead>
           <tr>
-            <th class="text-left" v-if="IsExpandable"></th>
             <th class="text-left">Dato</th>
             <th class="text-left">Status</th>
-            <th class="text-left">Antal</th>
+            <!-- <th class="text-left">Antal</th> -->
             <th class="text-left">Kr.</th>
+            <th class="text-left" v-if="IsExpandable"></th>
           </tr>
         </thead>
         <tbody>
-          <template v-for="(entry, index) in activities" :key="index">
+          <template v-for="(entry, index) in displayedActivities" :key="index">
             <tr
               @click="selectRow(index)"
               class="clickable-row"
               :class="{ 'row-selected': selectedRow === index }"
             >
-              <td v-if="selectedRow !== index && IsExpandable">
-                <v-icon icon="mdi mdi-plus" size="x-small"></v-icon>
-              </td>
-              <td v-else-if="IsExpandable">
-                <v-icon icon="mdi mdi-minus" size="x-small"></v-icon>
-              </td>
-              <td>{{ entry.date }}</td>
+              
+              <td class="text-no-wrap">{{ entry.date }}</td>
               <td>
                 <v-chip :color="getStatusColor(entry.status)" label small>
                   {{ statusMap[entry.status] }}
                 </v-chip>
               </td>
-              <td>{{ entry.amount }}</td>
+              <!-- <td>{{ entry.amount }}</td> -->
               <td>{{ entry.price }}</td>
+              <td v-if="selectedRow !== index && IsExpandable" class="d-flex justify-end align-center">
+                <v-icon icon="mdi mdi-chevron-down" size="x-small"></v-icon>
+              </td>
+              <td v-else-if="IsExpandable" class="d-flex justify-end align-center">
+                <v-icon icon="mdi mdi-chevron-up" size="x-small"></v-icon>
+              </td>
             </tr>
             <tr v-if="selectedRow === index && expandRow && entry.items">
-              <td colspan="5" class="expanded-details">
-                <div class="items-grid">
-                  <div
+              <td colspan="5" class="">
+                <v-container class="pa-1 py-4">
+                  <v-row
+                    class="pa-0 px-2"
                     v-for="(item, i) in entry.items"
                     :key="i"
-                    class="item-row"
                   >
-                    <span class="item-type">{{ item.type }}</span>
-                    <span class="item-quantity">{{ item.quantity }} stk.</span>
-                  </div>
-                  <v-btn
-                    @click="ViewMore"
-                    size="small"
-                    variant="text"
-                    color="#009fe4"
-                    >Vis mere</v-btn
-                  >
-                </div>
+                  <v-col class="pa-0 d-flex jusify-space-between">
+                    <p class="w-50 text-caption">{{ item.type }}</p>
+                    <p class="w-50 text-caption text-end">{{ item.quantity }} stk.</p>
+                  </v-col>
+                  </v-row>
+                  <v-row class="pa-0 py-1">
+                    <v-col class="pa-0">
+                      <v-divider/>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pa-0 px-2">
+                    <v-col class="pa-0 d-flex justify-space-between">
+                      <p class="w-50 text-caption font-weight-medium">Ialt:</p>
+                      <p class="w-50 text-caption font-weight-medium text-end">60 stk.</p>
+                    </v-col>
+                  </v-row>
+                  <v-row class="pa-0">
+                    <v-col class="pa-0 pt-1 d-flex justify-center">
+                      <v-btn
+                        @click="ViewMore"
+                        size="small"
+                        variant="text"
+                        color="#009fe4"
+                      >
+                        Vis alle detaljer
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </td>
             </tr>
           </template>
+          <tr v-if="ShowMoreLink">
+            <td colspan="5" class="text-end">
+              <p class="d-flex justify-end align-center text-end">
+                <router-link to="/min-pant" class="see-all-link">
+                  Se alle <v-icon icon="mdi mdi-arrow-right" size="small"></v-icon>
+                </router-link>
+              </p>
+            </td>
+          </tr>
         </tbody>
         <tfoot v-if="!IsPriceHidden && !IsAmountHidden">
           <tr>
-            <td v-if="IsExpandable"></td>
-            <td class="font-weight-bold">Total:</td>
-            <td></td>
-            <td class="font-weight-bold">{{ totalAmount }}</td>
-            <td class="font-weight-bold">{{ totalPrice }}</td>
+            <td colspan="2" class="font-weight-bold">Total:</td>
+            <!-- <td class="font-weight-bold">{{ totalAmount }}</td> -->
+            <td colspan="2" class="font-weight-bold">{{ totalPrice }}</td>
           </tr>
         </tfoot>
       </v-table>
@@ -149,6 +168,12 @@
       };
     },
     computed: {
+      displayedActivities() {
+        if (this.IsPriceHidden || this.IsAmountHidden) {
+          return this.activities.slice(0, 5);
+        }
+        return this.activities;
+      },
       totalAmount() {
         return this.activities.reduce((sum, entry) => sum + entry.amount, 0);
       },
@@ -228,10 +253,6 @@
 </script>
 
 <style scoped>
-  .pant-history {
-    padding: 20px;
-  }
-
   .total {
     display: flex;
     justify-content: space-between;
@@ -258,8 +279,6 @@
 
   .expanded-details {
     background-color: #fafafa;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 8px 16px;
   }
 
   .items-grid {
@@ -270,6 +289,7 @@
 
   .item-row {
     display: grid;
+    justify-content: space-between;
     grid-template-columns: 1fr auto auto;
     gap: 12px;
     font-size: 0.75rem;
@@ -303,11 +323,9 @@
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease-in-out;
-  }
-
-  .see-all-link .v-icon {
-    vertical-align: middle;
-    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
   }
 
   .v-chip {

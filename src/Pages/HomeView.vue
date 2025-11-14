@@ -1,26 +1,21 @@
 <template>
   <v-container class="pa-2">
     <v-container>
-      <v-row class="ga-4">
+      <v-row class="ga-2">
         <v-col class="pa-0">
           <router-link to="/scan" class="text-decoration-none">
-            <v-card class="bg-primary align-center pa-2 h-100">
+            <v-card class="bg-primary align-center pa-1 pt-4 pb-4 h-100">
               <p><v-icon icon="mdi-barcode-scan"></v-icon></p>
-              <p>Start scanning</p>
+              <p class="text-no-wrap text-button">Start scanning</p>
             </v-card>
           </router-link>
         </v-col>
         <v-col class="pa-0">
-          <router-link to="/min-pant" class="text-decoration-none">
-            <v-card class="bg-primary align-center pa-2 h-100">
-              <p><v-icon icon="mdi-recycle-variant"></v-icon></p>
-              <p>Min pant</p>
-            </v-card>
-          </router-link>
+          <OrderPickUpButton @open-dialog="dialog = true" />
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
+    <v-container class="mt-3">
       <v-row class="">
         <v-col class="pa-0 ga-4">
           <h3>Seneste aktivitet</h3>
@@ -83,9 +78,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <OrderPickUpButton @open-dialog="dialog = true" />
-    <OrderPickUpModal v-model="dialog" @close-dialog="dialog = false" />
   </v-container>
+  <OrderPickUpModal v-model="dialog" @close-dialog="dialog = false" />
 </template>
 
 <script>
