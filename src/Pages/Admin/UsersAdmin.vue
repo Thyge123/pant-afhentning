@@ -1,11 +1,221 @@
 <template>
-  <div>
-    <h1>Users Administration Page</h1>
-  </div>
+  <v-sheet>
+    <v-data-table :headers="headers" :items="users" class="elevation-1">
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Users Administration</v-toolbar-title>
+          <v-btn
+            class="me-2"
+            prepend-icon="mdi-plus"
+            rounded="lg"
+            text="Add an user"
+            border
+            @click="
+              dialog = true;
+              isEditing = false;
+            "
+          ></v-btn>
+        </v-toolbar>
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="EditUser(item)"> mdi-pencil </v-icon>
+        <v-icon small @click="DeleteUser(item.userId)"> mdi-delete </v-icon>
+      </template>
+    </v-data-table>
+  </v-sheet>
+  <v-dialog v-model="dialog" max-width="500">
+    <v-card
+      :subtitle="`${isEditing ? 'Update' : 'Create'} an User`"
+      :title="`${isEditing ? 'Edit' : 'Add'} an User`"
+    >
+      <template #[`text`]>
+        <v-row>
+          <v-col cols="12">
+            <v-text-field
+              label="First Name"
+              v-model="firstName"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              label="Last Name"
+              v-model="lastName"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              label="Email"
+              v-model="email"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              label="Birth Date"
+              v-model="birthDate"
+              variant="outlined"
+              type="date"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              label="By"
+              v-model="city"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              label="Zip Code"
+              v-model="zipCode"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              label="Street"
+              v-model="street"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12">
+            <v-text-field
+              label="Password"
+              v-model="password"
+              type="password"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </template>
+      <v-divider></v-divider>
+      <v-card-actions class="bg-surface-light">
+        <v-btn text="Cancel" variant="plain" @click="dialog = false"></v-btn>
+
+        <v-spacer></v-spacer>
+        <v-btn
+          v-if="isEditing"
+          text="Update"
+          @click="UpdateUser(userId)"
+        ></v-btn>
+        <v-btn text="Save" v-else @click="CreateNewUser"></v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-export default {};
+import UserDataService from "@/services/UserDataService";
+export default {
+  name: "UsersAdmin",
+  data() {
+    return {
+      dialog: false,
+      isEditing: false,
+      users: [],
+      headers: [
+        { title: "ID", key: "userId" },
+        { title: "First Name", key: "firstName" },
+        { title: "Last Name", key: "lastName" },
+        { title: "Birth Date", key: "birthDate" },
+        { title: "Address", key: "address" },
+        { title: "Email", key: "email" },
+        { title: "", key: "actions", sortable: false },
+      ],
+      userId: null,
+      firstName: "",
+      lastName: "",
+      birthDate: "",
+      city: "",
+      zipCode: "",
+      street: "",
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    CreateNewUser() {
+      const address = `${this.street}, ${this.zipCode} ${this.city}`;
+
+      UserDataService.create({
+        firstName: this.firstName,
+        lastName: this.lastName,
+        birthDate: this.birthDate,
+        address: address,
+        email: this.email,
+        password: this.password,
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+    EditUser(user) {
+      this.firstName = user.firstName;
+      this.lastName = user.lastName;
+      this.birthDate = user.birthDate;
+      this.city = user.address.split(", ")[1].split(" ")[1];
+      this.zipCode = user.address.split(", ")[1].split(" ")[0];
+      this.street = user.address.split(", ")[0];
+      this.email = user.email;
+      this.userId = user.userId; // Store the userId for updating later
+      this.isEditing = true;
+
+      this.dialog = true;
+    },
+    UpdateUser(id) {
+      const index = this.users.findIndex((user) => user.userId === id);
+      const address = `${this.street}, ${this.zipCode} ${this.city}`;
+
+      this.users[index].firstName = this.firstName;
+      this.users[index].lastName = this.lastName;
+      this.users[index].birthDate = this.birthDate;
+      this.users[index].address = address;
+      this.users[index].email = this.email;
+
+      UserDataService.update(id, {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        birthDate: this.birthDate,
+        address: address,
+        email: this.email,
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+
+      this.dialog = false;
+      this.isEditing = false;
+    },
+
+    DeleteUser(id) {
+      UserDataService.delete(id)
+        .then((response) => {
+          console.log(response.data);
+          this.users = this.users.filter((user) => user.userId !== id);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+  },
+  created() {
+    UserDataService.getAll()
+      .then((response) => {
+        this.users = response.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  },
+};
 </script>
 
-<style></style>
+<style scoped></style>
