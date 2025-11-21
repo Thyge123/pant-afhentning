@@ -74,6 +74,27 @@ const router = createRouter({
       name: "MyProfile",
       component: MyProfile,
     },
+    {
+      path: "/admin",
+      component: () => import("@/Pages/Admin/AdminLayout.vue"),
+      children: [
+        {
+          path: "home",
+          name: "admin-home",
+          component: () => import("@/Pages/Admin/HomeAdmin.vue"),
+        },
+        {
+          path: "users",
+          name: "admin-users",
+          component: () => import("@/Pages/Admin/UsersAdmin.vue"),
+        },
+        {
+          path: "scanninger",
+          name: "admin-scanninger",
+          component: () => import("@/Pages/Admin/ScanningerAdmin.vue"),
+        },
+      ],
+    },
   ],
 });
 
