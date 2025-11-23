@@ -1,15 +1,20 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-data-table :headers="headers" :items="users" class="elevation-1">
+      <v-data-table
+        :headers="headers"
+        :items="users"
+        class="elevation-1"
+        v-if="users.length > 0"
+      >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Users Administration</v-toolbar-title>
+            <v-toolbar-title>Bruger Administration</v-toolbar-title>
             <v-btn
               class="me-2"
               prepend-icon="mdi-plus"
               rounded="lg"
-              text="Add an user"
+              text="Tilføj en Bruger"
               border
               @click="
                 dialog = true;
@@ -25,14 +30,23 @@
           <v-icon small @click="DeleteUser(item.userId)"> mdi-delete </v-icon>
         </template>
       </v-data-table>
+      <div v-else>
+        <v-alert type="info" class="mt-5">
+          Ingen brugere fundet. Tilføj venligst en ny bruger.
+        </v-alert>
+      </div>
     </v-sheet>
-    <v-btn color="red" class="deleteAllUsers" @click="DeleteAllUsers"
-      >Delete All Users</v-btn
+    <v-btn
+      color="red"
+      class="deleteAllUsers"
+      @click="DeleteAllUsers"
+      v-if="users.length > 0"
+      >Slet Alle Brugere</v-btn
     >
     <v-dialog v-model="dialog" max-width="1000">
       <v-card
-        :subtitle="`${isEditing ? 'Update' : 'Create'} an User`"
-        :title="`${isEditing ? 'Edit' : 'Add'} an User`"
+        :subtitle="`${isEditing ? 'Opdater' : 'Opret'} en Bruger`"
+        :title="`${isEditing ? 'Rediger' : 'Tilføj'} en Bruger`"
       >
         <template #[`text`]>
           <v-row>
@@ -218,7 +232,7 @@ export default {
     },
 
     DeleteUser(id) {
-      if (confirm("Are you sure you want to delete this user?")) {
+      if (confirm("Er du sikker på, at du vil slette denne bruger?")) {
         UserDataService.delete(id)
           .then((response) => {
             console.log(response.data);

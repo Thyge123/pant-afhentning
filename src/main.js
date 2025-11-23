@@ -94,6 +94,11 @@ const router = createRouter({
           name: "admin-scanninger",
           component: () => import("@/Pages/Admin/ScanningerAdmin.vue"),
         },
+        {
+          path: "categories",
+          name: "admin-categories",
+          component: () => import("@/Pages/Admin/PantCategoryAdmin.vue"),
+        },
       ],
     },
   ],
