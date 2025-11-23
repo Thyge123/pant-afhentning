@@ -51,6 +51,12 @@
             value="categories"
             :to="{ name: 'admin-categories' }"
           ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-chart-bar"
+            title="Aktivitets Statusser"
+            value="activity-statuses"
+            :to="{ name: 'admin-activity-statuses' }"
+          ></v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-main style="height: 80vh">

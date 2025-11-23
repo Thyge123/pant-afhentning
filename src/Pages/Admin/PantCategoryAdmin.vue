@@ -1,12 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-data-table
-        :headers="headers"
-        :items="categories"
-        class="elevation-1"
-        v-if="categories.length > 0"
-      >
+      <v-data-table :headers="headers" :items="categories" class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Pant Kategori Administration</v-toolbar-title>
@@ -23,34 +18,34 @@
             ></v-btn>
           </v-toolbar>
         </template>
+
         <template #[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="EditCategory(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="DeleteCategory(item.id)"> mdi-delete </v-icon>
         </template>
+
+        <template #[`item.name`]="{ item }">
+          <v-chip :color="getCategoryColor(item.name)" label small>
+            {{ item.name }}
+          </v-chip>
+        </template>
+        <template v-slot:no-data>
+          <v-btn
+            variant="outlined"
+            prepend-icon="mdi-plus"
+            rounded="lg"
+            text="Ingen pant kategorier fundet. Tilføj venligst en ny pant
+              kategori."
+            border
+            @click="
+              dialog = true;
+              isEditing = false;
+            "
+          ></v-btn>
+        </template>
       </v-data-table>
-      <div v-else>
-        <v-alert type="info">
-          <div class="d-flex align-center justify-space-between w-100">
-            <span
-              >Ingen pant kategorier fundet. Tilføj venligst en ny pant
-              kategori.</span
-            >
-            <v-btn
-              variant="outlined"
-              prepend-icon="mdi-plus"
-              rounded="lg"
-              text="Tilføj en Pant Kategori"
-              border
-              @click="
-                dialog = true;
-                isEditing = false;
-              "
-            ></v-btn>
-          </div>
-        </v-alert>
-      </div>
     </v-sheet>
     <v-btn color="red" class="deleteAllCategories" v-if="categories.length > 0"
       >Delete All Categories</v-btn
