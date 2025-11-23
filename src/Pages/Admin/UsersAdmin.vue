@@ -1,109 +1,116 @@
 <template>
-  <v-sheet>
-    <v-data-table :headers="headers" :items="users" class="elevation-1">
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>Users Administration</v-toolbar-title>
-          <v-btn
-            class="me-2"
-            prepend-icon="mdi-plus"
-            rounded="lg"
-            text="Add an user"
-            border
-            @click="
-              dialog = true;
-              isEditing = false;
-            "
-          ></v-btn>
-        </v-toolbar>
-      </template>
-      <template #[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="EditUser(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="DeleteUser(item.userId)"> mdi-delete </v-icon>
-      </template>
-    </v-data-table>
-  </v-sheet>
-  <v-dialog v-model="dialog" max-width="500">
-    <v-card
-      :subtitle="`${isEditing ? 'Update' : 'Create'} an User`"
-      :title="`${isEditing ? 'Edit' : 'Add'} an User`"
+  <v-container fluid>
+    <v-sheet>
+      <v-data-table :headers="headers" :items="users" class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title>Users Administration</v-toolbar-title>
+            <v-btn
+              class="me-2"
+              prepend-icon="mdi-plus"
+              rounded="lg"
+              text="Add an user"
+              border
+              @click="
+                dialog = true;
+                isEditing = false;
+              "
+            ></v-btn>
+          </v-toolbar>
+        </template>
+        <template #[`item.actions`]="{ item }">
+          <v-icon small class="mr-2" @click="EditUser(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon small @click="DeleteUser(item.userId)"> mdi-delete </v-icon>
+        </template>
+      </v-data-table>
+    </v-sheet>
+    <v-btn color="red" class="deleteAllUsers" @click="DeleteAllUsers"
+      >Delete All Users</v-btn
     >
-      <template #[`text`]>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field
-              label="First Name"
-              v-model="firstName"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              label="Last Name"
-              v-model="lastName"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              label="Email"
-              v-model="email"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              label="Birth Date"
-              v-model="birthDate"
-              variant="outlined"
-              type="date"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field
-              label="By"
-              v-model="city"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field
-              label="Zip Code"
-              v-model="zipCode"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              label="Street"
-              v-model="street"
-              variant="outlined"
-            ></v-text-field>
-          </v-col>
+    <v-dialog v-model="dialog" max-width="1000">
+      <v-card
+        :subtitle="`${isEditing ? 'Update' : 'Create'} an User`"
+        :title="`${isEditing ? 'Edit' : 'Add'} an User`"
+      >
+        <template #[`text`]>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                label="First Name"
+                v-model="firstName"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                label="Last Name"
+                v-model="lastName"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                label="Email"
+                v-model="email"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                label="Birth Date"
+                v-model="birthDate"
+                variant="outlined"
+                type="date"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                label="By"
+                v-model="city"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                label="Zip Code"
+                v-model="zipCode"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                label="Street"
+                v-model="street"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
 
-          <v-col cols="12">
-            <v-text-field
-              label="Password"
-              v-model="password"
-              type="password"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </template>
-      <v-divider></v-divider>
-      <v-card-actions class="bg-surface-light">
-        <v-btn text="Cancel" variant="plain" @click="dialog = false"></v-btn>
+            <v-col cols="12" v-if="!isEditing">
+              <v-text-field
+                label="Password"
+                v-model="password"
+                type="password"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </template>
+        <v-divider></v-divider>
+        <v-card-actions class="bg-surface-light">
+          <v-btn text="Cancel" variant="plain" @click="dialog = false"></v-btn>
 
-        <v-spacer></v-spacer>
-        <v-btn
-          v-if="isEditing"
-          text="Update"
-          @click="UpdateUser(userId)"
-        ></v-btn>
-        <v-btn text="Save" v-else @click="CreateNewUser"></v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+          <v-spacer></v-spacer>
+          <v-btn
+            v-if="isEditing"
+            text="Update"
+            @click="UpdateUser(userId)"
+          ></v-btn>
+          <v-btn text="Save" v-else @click="CreateNewUser"></v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -136,6 +143,16 @@ export default {
     };
   },
   methods: {
+    GetUsers() {
+      UserDataService.getAll()
+        .then((response) => {
+          this.users = response.data;
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+
     CreateNewUser() {
       const address = `${this.street}, ${this.zipCode} ${this.city}`;
 
@@ -153,6 +170,8 @@ export default {
         .catch((e) => {
           console.error(e);
         });
+      this.dialog = false;
+      this.GetUsers();
     },
     EditUser(user) {
       this.firstName = user.firstName;
@@ -163,6 +182,7 @@ export default {
       this.street = user.address.split(", ")[0];
       this.email = user.email;
       this.userId = user.userId; // Store the userId for updating later
+      this.password = user.password;
       this.isEditing = true;
 
       this.dialog = true;
@@ -176,6 +196,7 @@ export default {
       this.users[index].birthDate = this.birthDate;
       this.users[index].address = address;
       this.users[index].email = this.email;
+      this.users[index].password = this.password;
 
       UserDataService.update(id, {
         firstName: this.firstName,
@@ -183,6 +204,7 @@ export default {
         birthDate: this.birthDate,
         address: address,
         email: this.email,
+        password: this.password,
       })
         .then((response) => {
           console.log(response.data);
@@ -196,10 +218,26 @@ export default {
     },
 
     DeleteUser(id) {
-      UserDataService.delete(id)
+      if (confirm("Are you sure you want to delete this user?")) {
+        UserDataService.delete(id)
+          .then((response) => {
+            console.log(response.data);
+            this.users = this.GetUsers();
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      } else {
+        // User canceled the deletion
+        return;
+      }
+    },
+
+    DeleteAllUsers() {
+      UserDataService.deleteAllUsers()
         .then((response) => {
           console.log(response.data);
-          this.users = this.users.filter((user) => user.userId !== id);
+          this.users = [];
         })
         .catch((e) => {
           console.error(e);
@@ -207,15 +245,14 @@ export default {
     },
   },
   created() {
-    UserDataService.getAll()
-      .then((response) => {
-        this.users = response.data;
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    this.GetUsers();
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.deleteAllUsers {
+  margin-top: 16px;
+  float: right;
+}
+</style>
