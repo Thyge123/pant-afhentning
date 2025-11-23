@@ -45,6 +45,12 @@
             value="scanninger"
             :to="{ name: 'admin-scanninger' }"
           ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-cup-water"
+            title="Pant Kategorier"
+            value="categories"
+            :to="{ name: 'admin-categories' }"
+          ></v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-main style="height: 80vh">

@@ -49,7 +49,7 @@
       </v-list-item>
       <v-list-item
         prepend-icon="mdi-account"
-        @click="$router.push('/admin')"
+        @click="$router.push('/admin/home')"
         link
         title="Admin"
       >

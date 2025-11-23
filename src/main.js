@@ -77,6 +77,7 @@ const router = createRouter({
     {
       path: "/admin",
       component: () => import("@/Pages/Admin/AdminLayout.vue"),
+      redirect: "/admin/home",
       children: [
         {
           path: "home",
@@ -92,6 +93,11 @@ const router = createRouter({
           path: "scanninger",
           name: "admin-scanninger",
           component: () => import("@/Pages/Admin/ScanningerAdmin.vue"),
+        },
+        {
+          path: "categories",
+          name: "admin-categories",
+          component: () => import("@/Pages/Admin/PantCategoryAdmin.vue"),
         },
       ],
     },

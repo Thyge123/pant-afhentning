@@ -1,8 +1,8 @@
-import http from '../http-common';
+import http from "../http-common";
 
 class UserDataService {
   getAll() {
-    return http.get('/users');
+    return http.get("/users");
   }
 
   get(id) {
@@ -10,7 +10,11 @@ class UserDataService {
   }
 
   create(data) {
-    return http.post('/users', data);
+    return http.post("/users", data);
+  }
+
+  login(data) {
+    return http.post("/users/login", data);
   }
 
   update(id, data) {

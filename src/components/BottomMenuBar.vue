@@ -39,7 +39,7 @@
   </v-bottom-navigation>
 
   <v-fab
-    v-if="!isOnScannerPage && !isOnLoginPage"
+    v-if="!isOnScannerPage && !isOnLoginPage && !isOnAdminPage"
     class="centered-fab"
     icon="mdi-barcode-scan"
     @click="$router.push('/scan')"
@@ -57,6 +57,9 @@ export default {
     isOnLoginPage() {
       const loginPaths = ["/login", "/register"];
       return loginPaths.includes(this.$route.path);
+    },
+    isOnAdminPage() {
+      return this.$route.path.startsWith("/admin");
     },
   },
 };
