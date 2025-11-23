@@ -48,10 +48,10 @@ export default {
   components: {
     LogoBanner,
   },
+  emits: ["user-logged-in"],
   data() {
     return {
       valid: false,
-      loggedInUser: null,
       email: "",
       password: "",
 
@@ -101,7 +101,7 @@ export default {
       UserDataService.login(userData)
         .then((response) => {
           if (response.data.message === "Login successful") {
-            this.loggedInUser = response.data.user;
+            this.$emit("user-logged-in", response.data.user);
             this.$router.push("/");
           }
         })
@@ -114,11 +114,6 @@ export default {
           }
         });
     },
-  },
-  provide() {
-    return {
-      getLoggedInUser: () => this.loggedInUser,
-    };
   },
 };
 </script>
