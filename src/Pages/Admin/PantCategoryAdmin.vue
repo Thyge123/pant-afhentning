@@ -6,6 +6,7 @@
           <v-toolbar flat>
             <v-toolbar-title>Pant Kategori Administration</v-toolbar-title>
             <v-btn
+              v-if="categories.length > 0"
               class="me-2"
               prepend-icon="mdi-plus"
               rounded="lg"
@@ -36,8 +37,7 @@
             variant="outlined"
             prepend-icon="mdi-plus"
             rounded="lg"
-            text="Ingen pant kategorier fundet. Tilføj venligst en ny pant
-              kategori."
+            text="Tilføj en ny pant kategori."
             border
             @click="
               dialog = true;
