@@ -184,12 +184,12 @@ export default {
       })
         .then((response) => {
           console.log(response.data);
+          this.GetUsers();
+          this.dialog = false;
         })
         .catch((e) => {
           console.error(e);
         });
-      this.dialog = false;
-      this.GetUsers();
     },
     EditUser(user) {
       this.firstName = user.firstName;
