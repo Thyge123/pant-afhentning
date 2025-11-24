@@ -109,6 +109,11 @@ const router = createRouter({
           name: "admin-products",
           component: () => import("@/Pages/Admin/ProductsAdmin.vue"),
         },
+        {
+          path: "report-reasons",
+          name: "admin-report-reasons",
+          component: () => import("@/Pages/Admin/ReportReasonAdmin.vue"),
+        },
       ],
     },
   ],
