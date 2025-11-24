@@ -78,6 +78,8 @@
                 label="Aktivitet"
                 v-model="activityId"
                 variant="outlined"
+                item-title="activityId"
+                item-value="activityId"
               ></v-select>
             </v-col>
           </v-row>
@@ -99,6 +101,7 @@
 <script>
 import ReportDataService from "@/services/ReportDataService";
 import ReportReasonDataService from "@/services/ReportReasonDataService";
+import ActivityDataService from "@/services/ActivityDataService";
 export default {
   name: "ReportAdmin",
   data() {
@@ -135,6 +138,15 @@ export default {
       ReportReasonDataService.getAll()
         .then((response) => {
           this.reportReasons = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getActivities() {
+      ActivityDataService.getAll()
+        .then((response) => {
+          this.activities = response.data;
         })
         .catch((e) => {
           console.log(e);
@@ -211,6 +223,7 @@ export default {
   created() {
     this.getReports();
     this.getReportReasons();
+    this.getActivities();
   },
 };
 </script>
