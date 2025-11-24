@@ -63,6 +63,12 @@
             value="products"
             :to="{ name: 'admin-products' }"
           ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-alert-circle-outline"
+            title="Rapport Årsager"
+            value="report-reasons"
+            :to="{ name: 'admin-report-reasons' }"
+          ></v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-main style="height: 80vh">
