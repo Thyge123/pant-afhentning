@@ -1,16 +1,12 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-data-table
-        :headers="headers"
-        :items="users"
-        class="elevation-1"
-        v-if="users.length > 0"
-      >
+      <v-data-table :headers="headers" :items="users" class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Bruger Administration</v-toolbar-title>
             <v-btn
+              v-if="users.length > 0"
               class="me-2"
               prepend-icon="mdi-plus"
               rounded="lg"
@@ -29,12 +25,20 @@
           </v-icon>
           <v-icon small @click="DeleteUser(item.userId)"> mdi-delete </v-icon>
         </template>
+        <template v-slot:no-data>
+          <v-btn
+            variant="outlined"
+            prepend-icon="mdi-plus"
+            rounded="lg"
+            text="Tilføj en Bruger"
+            border
+            @click="
+              dialog = true;
+              isEditing = false;
+            "
+          ></v-btn>
+        </template>
       </v-data-table>
-      <div v-else>
-        <v-alert type="info" class="mt-5">
-          Ingen brugere fundet. Tilføj venligst en ny bruger.
-        </v-alert>
-      </div>
     </v-sheet>
     <v-btn
       color="red"

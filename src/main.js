@@ -99,6 +99,16 @@ const router = createRouter({
           name: "admin-categories",
           component: () => import("@/Pages/Admin/PantCategoryAdmin.vue"),
         },
+        {
+          path: "activity-statuses",
+          name: "admin-activity-statuses",
+          component: () => import("@/Pages/Admin/ActivityStatusAdmin.vue"),
+        },
+        {
+          path: "products",
+          name: "admin-products",
+          component: () => import("@/Pages/Admin/ProductsAdmin.vue"),
+        },
       ],
     },
   ],
