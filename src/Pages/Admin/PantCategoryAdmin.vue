@@ -27,11 +27,6 @@
           <v-icon small @click="DeleteCategory(item.id)"> mdi-delete </v-icon>
         </template>
 
-        <template #[`item.name`]="{ item }">
-          <v-chip :color="getCategoryColor(item.name)" label small>
-            {{ item.name }}
-          </v-chip>
-        </template>
         <template v-slot:no-data>
           <v-btn
             variant="outlined"
