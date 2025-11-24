@@ -114,6 +114,11 @@ const router = createRouter({
           name: "admin-report-reasons",
           component: () => import("@/Pages/Admin/ReportReasonAdmin.vue"),
         },
+        {
+          path: "reports",
+          name: "admin-reports",
+          component: () => import("@/Pages/Admin/ReportAdmin.vue"),
+        },
       ],
     },
   ],
