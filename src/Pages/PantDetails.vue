@@ -76,91 +76,92 @@
       v-if="showReportModal"
       :model-value="showReportModal"
       @close-report-dialog="showReportModal = false"
+      :activityId="activityDetails.id"
     />
   </v-container>
 </template>
 
 <script>
-  import BugReportButton from "../components/BugReportButton.vue";
-  import ReportModal from "../components/ReportModal.vue";
-  export default {
-    name: "PantScanDetails",
-    components: {
-      BugReportButton,
-      ReportModal,
-    },
-    data() {
-      return {
-        activityDetails: null,
-        showReportModal: false,
-        isLoading: true,
+import BugReportButton from "../components/BugReportButton.vue";
+import ReportModal from "../components/ReportModal.vue";
+export default {
+  name: "PantScanDetails",
+  components: {
+    BugReportButton,
+    ReportModal,
+  },
+  data() {
+    return {
+      activityDetails: null,
+      showReportModal: false,
+      isLoading: true,
+    };
+  },
+  inject: ["activities", "statusMap"],
+  computed: {
+    priceTotal() {
+      if (!this.activityDetails || !this.activityDetails.items) return 0;
+      const pantValues = {
+        A: 1, // Dåser = 1 kr
+        B: 1.5, // Flasker = 1.5 kr
+        C: 3, // Store flasker = 3 kr
       };
-    },
-    inject: ["activities", "statusMap"],
-    computed: {
-      priceTotal() {
-        if (!this.activityDetails || !this.activityDetails.items) return 0;
-        const pantValues = {
-          A: 1, // Dåser = 1 kr
-          B: 1.5, // Flasker = 1.5 kr
-          C: 3, // Store flasker = 3 kr
-        };
 
-        return this.activityDetails.items.reduce((total, item) => {
-          const pantValue = pantValues[item.pant] || 0;
-          return total + pantValue * item.quantity;
-        }, 0);
-      },
-      totalAmount() {
-        if (!this.activityDetails || !this.activityDetails.items) return 0;
-        return this.activityDetails.items.reduce(
-          (sum, item) => sum + item.quantity,
-          0
-        );
-      },
-      isActivityFinished() {
-        return this.activityDetails && this.activityDetails.status === 4;
-      },
+      return this.activityDetails.items.reduce((total, item) => {
+        const pantValue = pantValues[item.pant] || 0;
+        return total + pantValue * item.quantity;
+      }, 0);
     },
-    methods: {
-      fetchActivityDetails(activityId) {
-        this.activityDetails = this.activities.find(
-          (activity) => activity.id === parseInt(activityId)
-        );
-        console.log("Fetched activity details:", this.activityDetails);
-      },
+    totalAmount() {
+      if (!this.activityDetails || !this.activityDetails.items) return 0;
+      return this.activityDetails.items.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
     },
-    mounted() {
-      const activityId = this.$route.params.id;
-      // Fetch and display details based on activityId
-      this.fetchActivityDetails(activityId);
+    isActivityFinished() {
+      return this.activityDetails && this.activityDetails.status === 4;
     },
-  };
+  },
+  methods: {
+    fetchActivityDetails(activityId) {
+      this.activityDetails = this.activities.find(
+        (activity) => activity.id === parseInt(activityId)
+      );
+      console.log("Fetched activity details:", this.activityDetails);
+    },
+  },
+  mounted() {
+    const activityId = this.$route.params.id;
+    // Fetch and display details based on activityId
+    this.fetchActivityDetails(activityId);
+  },
+};
 </script>
 
 <style scoped>
-  .pant-details {
-    max-width: 800px;
-    margin: auto;
-  }
+.pant-details {
+  max-width: 800px;
+  margin: auto;
+}
 
-  .details-grid {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
+.details-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 
-  .totals-container {
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    gap: 16px;
-  }
+.totals-container {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  gap: 16px;
+}
 
-  .total-item {
-    flex: 1;
-    padding: 16px;
-    border-radius: 4px;
-    background-color: #f5f5f5;
-  }
+.total-item {
+  flex: 1;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+}
 </style>
