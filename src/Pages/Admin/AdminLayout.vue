@@ -64,6 +64,12 @@
             :to="{ name: 'admin-products' }"
           ></v-list-item>
           <v-list-item
+            prepend-icon="mdi-file-chart"
+            title="Rapporter"
+            value="reports"
+            :to="{ name: 'admin-reports' }"
+          ></v-list-item>
+          <v-list-item
             prepend-icon="mdi-alert-circle-outline"
             title="Rapport Årsager"
             value="report-reasons"

@@ -61,6 +61,7 @@
             </v-col>
           </v-row>
         </template>
+        <v-divider></v-divider>
         <template #actions>
           <v-btn text @click="dialog = false">Annuller</v-btn>
           <v-btn
