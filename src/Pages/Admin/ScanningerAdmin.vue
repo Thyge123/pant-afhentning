@@ -12,7 +12,10 @@
               rounded="lg"
               text="Opret en Scanning"
               border
-              @click="createActivity()"
+              @click="
+                dialog = true;
+                isEditing = false;
+              "
             ></v-btn>
           </v-toolbar>
         </template>
@@ -38,7 +41,9 @@
           <v-icon small class="mr-2" @click="EditActivity(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="DeleteActivity(item.id)"> mdi-delete </v-icon>
+          <v-icon small @click="DeleteActivity(item.activityId)">
+            mdi-delete
+          </v-icon>
         </template>
         <template v-slot:no-data>
           <v-btn
@@ -199,7 +204,7 @@ export default {
       switch (status) {
         case "Gemt":
           return "green-darken-1";
-        case "Afhenter":
+        case "Anmodet":
           return "orange-darken-1";
         case "Afhentet":
           return "blue-darken-1";

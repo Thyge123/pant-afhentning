@@ -57,6 +57,13 @@
                 v-model="name"
                 label="Produkt Navn"
                 required
+                variant="outlined"
+              ></v-text-field>
+              <v-text-field
+                v-model="barcode"
+                label="Stregkode"
+                required
+                variant="outlined"
               ></v-text-field>
               <v-select
                 :items="categories"
@@ -65,6 +72,7 @@
                 item-value="categoryId"
                 label="Produkt Kategori"
                 required
+                variant="outlined"
               ></v-select>
             </v-col>
           </v-row>
@@ -105,6 +113,7 @@ export default {
       id: null,
       name: "",
       categoryId: null,
+      barcode: "",
     };
   },
   /*
@@ -142,6 +151,7 @@ export default {
       const newProduct = {
         name: this.name,
         categoryId: this.categoryId,
+        barcode: this.barcode,
       };
       ProductDataService.create(newProduct)
         .then(() => {
@@ -157,6 +167,7 @@ export default {
       this.id = item.productId;
       this.name = item.name;
       this.categoryId = item.categoryId;
+      this.barcode = item.barcode;
       this.dialog = true;
     },
     UpdateProduct() {
@@ -164,6 +175,7 @@ export default {
         productId: this.id,
         name: this.name,
         categoryId: this.categoryId,
+        barcode: this.barcode,
       };
       ProductDataService.update(this.id, updatedProduct)
         .then(() => {

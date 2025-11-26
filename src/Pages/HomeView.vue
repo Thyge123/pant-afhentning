@@ -79,28 +79,37 @@
       </v-row>
     </v-container>
   </v-container>
-  <OrderPickUpModal v-model="dialog" @close-dialog="dialog = false" />
+  <OrderPickUpModal
+    v-model="dialog"
+    @close-dialog="dialog = false"
+    @activity-updated="handleActivityUpdated"
+  />
 </template>
 
 <script>
-  //import PantHistory from "./PantHistory.vue";
-  import OrderPickUpButton from "../components/OrderPickUpButton.vue";
-  import OrderPickUpModal from "../components/OrderPickUpModal.vue";
-  import PantHistory from "../Pages/PantHistory.vue";
-  export default {
-    inject: ["activities", "statusMap", "getStatusColor"],
-    components: { OrderPickUpButton, OrderPickUpModal, PantHistory },
-    data() {
-      return {
-        showMore: false,
-        dialog: false,
-      };
+//import PantHistory from "./PantHistory.vue";
+import OrderPickUpButton from "../components/OrderPickUpButton.vue";
+import OrderPickUpModal from "../components/OrderPickUpModal.vue";
+import PantHistory from "../Pages/PantHistory.vue";
+export default {
+  inject: ["activities", "statusMap", "getStatusColor", "refreshActivities"],
+  components: { OrderPickUpButton, OrderPickUpModal, PantHistory },
+  data() {
+    return {
+      showMore: false,
+      dialog: false,
+    };
+  },
+  methods: {
+    handleActivityUpdated(userId) {
+      this.refreshActivities(userId);
     },
-  };
+  },
+};
 </script>
 
 <style scoped>
-  .pant-history {
-    padding: 20px 0px;
-  }
+.pant-history {
+  padding: 20px 0px;
+}
 </style>
