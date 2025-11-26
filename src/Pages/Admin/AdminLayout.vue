@@ -46,6 +46,12 @@
             :to="{ name: 'admin-scanninger' }"
           ></v-list-item>
           <v-list-item
+            prepend-icon="mdi-format-list-bulleted"
+            title="Aktivitets Items"
+            value="activity-items"
+            :to="{ name: 'admin-activity-items' }"
+          ></v-list-item>
+          <v-list-item
             prepend-icon="mdi-cup-water"
             title="Pant Kategorier"
             value="categories"

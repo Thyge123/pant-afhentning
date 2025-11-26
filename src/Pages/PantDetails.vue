@@ -17,12 +17,12 @@
           <div class="details-grid">
             <div>
               <div class="text-subtitle-2">Dato</div>
-              <div class="text-body-1">{{ activityDetails.date }}</div>
+              <div class="text-body-1">{{ formattedDate }}</div>
             </div>
             <div>
               <div class="text-subtitle-2">Status</div>
               <div class="text-body-1">
-                {{ statusMap[activityDetails.status] }}
+                {{ statusMap[activityDetails.activityStatus.statusId] }}
               </div>
             </div>
             <div v-if="activityDetails.pickUpDate">
@@ -38,14 +38,14 @@
           <h3 class="text-h6 mb-2">Indsamlede varer</h3>
           <v-list dense>
             <v-list-item
-              v-for="(item, index) in activityDetails.items"
+              v-for="(item, index) in activityDetails.activityItems"
               :key="index"
             >
               <v-list-item-title>
-                {{ item.type }} - {{ item.quantity }} stk.
+                {{ item.product.name }} - {{ item.quantity }} stk.
               </v-list-item-title>
               <v-list-item-subtitle>
-                Pant: {{ item.pant }}
+                Pant: {{ item.product.category.price }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-list>
@@ -84,6 +84,7 @@
 <script>
 import BugReportButton from "../components/BugReportButton.vue";
 import ReportModal from "../components/ReportModal.vue";
+import ActivityDataService from "@/services/ActivityDataService";
 export default {
   name: "PantScanDetails",
   components: {
@@ -97,44 +98,60 @@ export default {
       isLoading: true,
     };
   },
-  inject: ["activities", "statusMap"],
+  inject: [/*"activities",*/ "statusMap"],
   computed: {
     priceTotal() {
-      if (!this.activityDetails || !this.activityDetails.items) return 0;
-      const pantValues = {
-        A: 1, // Dåser = 1 kr
-        B: 1.5, // Flasker = 1.5 kr
-        C: 3, // Store flasker = 3 kr
-      };
+      if (!this.activityDetails || !this.activityDetails.activityItems)
+        return 0;
 
-      return this.activityDetails.items.reduce((total, item) => {
-        const pantValue = pantValues[item.pant] || 0;
-        return total + pantValue * item.quantity;
-      }, 0);
+      return this.activityDetails.activityItems.reduce(
+        (sum, item) => sum + item.quantity * item.product.category.price,
+        0
+      );
     },
     totalAmount() {
-      if (!this.activityDetails || !this.activityDetails.items) return 0;
-      return this.activityDetails.items.reduce(
+      if (!this.activityDetails || !this.activityDetails.activityItems)
+        return 0;
+      return this.activityDetails.activityItems.reduce(
         (sum, item) => sum + item.quantity,
         0
       );
     },
     isActivityFinished() {
-      return this.activityDetails && this.activityDetails.status === 4;
+      return this.activityDetails && this.activityDetails.statusId === 4;
+    },
+    formattedDate() {
+      if (!this.activityDetails) return "";
+      const date = new Date(this.activityDetails.date);
+      return date.toLocaleDateString();
     },
   },
   methods: {
+    /*
     fetchActivityDetails(activityId) {
       this.activityDetails = this.activities.find(
         (activity) => activity.id === parseInt(activityId)
       );
       console.log("Fetched activity details:", this.activityDetails);
     },
+    */
+    GetActivityById(id) {
+      return ActivityDataService.get(id)
+        .then((response) => {
+          this.activityDetails = response.data;
+          console.log("Fetched activity details:", this.activityDetails);
+          this.isLoading = false;
+        })
+        .catch((e) => {
+          console.log(e);
+          this.isLoading = false;
+        });
+    },
   },
   mounted() {
     const activityId = this.$route.params.id;
     // Fetch and display details based on activityId
-    this.fetchActivityDetails(activityId);
+    this.GetActivityById(activityId);
   },
 };
 </script>

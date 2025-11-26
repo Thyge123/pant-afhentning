@@ -112,7 +112,7 @@ export default {
       switch (status) {
         case "Gemt":
           return "green-darken-1";
-        case "Afhenter":
+        case "Anmodet":
           return "orange-darken-1";
         case "Afhentet":
           return "blue-darken-1";

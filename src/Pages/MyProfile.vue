@@ -23,7 +23,9 @@
             </div>
             <div class="info-item">
               <div class="text-subtitle-2 text-grey">Fødselsdato</div>
-              <div class="text-body-1">{{ birthDate }}</div>
+              <div class="text-body-1">
+                {{ birthDateFormatted }}
+              </div>
             </div>
           </div>
         </div>
@@ -130,15 +132,29 @@ export default {
   },
   computed: {
     totalPrice() {
-      return this.activities.reduce((sum, entry) => sum + entry.price, 0);
+      console.log("Calculating total price from activities:", this.activities);
+      if (!this.activities || this.activities.length === 0) return 0;
+
+      return this.activities.reduce((total, activity) => {
+        if (!activity.activityItems) return total;
+
+        const activityTotal = activity.activityItems.reduce(
+          (sum, item) => sum + item.quantity * item.product.category.price,
+          0
+        );
+        return total + activityTotal;
+      }, 0);
     },
     currentUser() {
-      // Use a computed property to get the user object
       return this.loggedInUser ? this.loggedInUser() : null;
+    },
+    birthDateFormatted() {
+      if (!this.birthDate) return "";
+      const date = new Date(this.birthDate);
+      return date.toLocaleDateString();
     },
   },
   created() {
-    // Now this will work correctly
     console.log("Logged in user in MyProfile:", this.currentUser);
     if (this.currentUser) {
       this.firstName = this.currentUser.firstName;
