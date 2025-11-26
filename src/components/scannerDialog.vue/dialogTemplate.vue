@@ -143,33 +143,62 @@ export default {
         console.error("No logged in user");
         return;
       }
+      let activityId;
+
+      // Fetch all saved activities for the current user
       this.getAllSavedActivities()
         .then((existingActivities) => {
+          // If no saved activities exist, create a new one with status 1 (saved)
           if (!existingActivities || existingActivities.length === 0) {
             return ActivityDataService.create({
               userId: user.userId,
               date: new Date().toISOString(),
               statusId: 1,
+            }).then((response) => {
+              activityId = response.data.activityId;
+              return []; // Return empty array since no items exist yet
             });
           } else {
-            // Return existing activity instead of updating it
-            return Promise.resolve({ data: existingActivities[0] });
+            // Use the first existing saved activity
+            activityId = existingActivities[0].activityId;
+            // Fetch all activity items and filter by current activity
+            return ActivityItemDataService.getAll().then((response) => {
+              const items = response.data || [];
+              return items.filter((item) => item.activityId === activityId);
+            });
           }
         })
-        .then((response) => {
-          const activityId = response.data.activityId;
+        .then((existingItems) => {
+          // Create a map of existing items by productId for quick lookup
+          const existingItemsMap = new Map(
+            existingItems.map((item) => [item.productId, item])
+          );
 
+          // Process each scanned beverage
           const itemPromises = this.beverages.map((beverage) => {
-            return ActivityItemDataService.create({
-              activityId: activityId,
-              productId: beverage.id,
-              quantity: beverage.count,
-            });
+            const existingItem = existingItemsMap.get(beverage.id);
+            console.log("existingItem", existingItem);
+            // If item already exists in activity, update quantity
+            if (existingItem) {
+              const newQuantity = existingItem.quantity + beverage.count;
+              return ActivityItemDataService.update(existingItem.itemId, {
+                quantity: newQuantity,
+              });
+            } else {
+              // Otherwise, create a new activity item
+              return ActivityItemDataService.create({
+                activityId: activityId,
+                productId: beverage.id,
+                quantity: beverage.count,
+              });
+            }
           });
 
+          // Wait for all item operations to complete
           return Promise.all(itemPromises);
         })
         .then(() => {
+          // Emit event to notify parent component of activity update
           this.$emit("activity-updated", user.userId);
         })
         .catch((error) => {
@@ -182,6 +211,7 @@ export default {
         console.error("No logged in user");
         return;
       }
+      // Create a new activity with status 2 (pickup requested)
       ActivityDataService.create({
         userId: user.userId,
         date: new Date().toISOString(),
@@ -190,6 +220,7 @@ export default {
         .then((response) => {
           const newActivityId = response.data.activityId;
 
+          // Create activity items for all scanned beverages
           const itemPromises = this.beverages.map((beverage) => {
             return ActivityItemDataService.create({
               activityId: newActivityId,
@@ -198,9 +229,11 @@ export default {
             });
           });
 
+          // Wait for all item creations to complete
           return Promise.all(itemPromises);
         })
         .then(() => {
+          // Emit event to notify parent component of activity update
           this.$emit("activity-updated", user.userId);
         })
         .catch((error) => {
@@ -214,7 +247,6 @@ export default {
       this.finishingSave = true;
       this.finishingPickup = false;
       this.CreateActivity();
-      // Remove emit from here - it's now in CreateActivity()
     },
     pickupDialog() {
       this.dialog = true;
@@ -223,7 +255,6 @@ export default {
       this.finishingSave = false;
       this.finishingPickup = true;
       this.updateActivity();
-      // Remove emit from here - it's now in updateActivity()
     },
     pickupDialog2() {
       if (this.pickup === true && this.totalSum < 100) {
