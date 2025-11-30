@@ -74,6 +74,58 @@ const router = createRouter({
       name: "MyProfile",
       component: MyProfile,
     },
+    {
+      path: "/admin",
+      component: () => import("@/Pages/Admin/AdminLayout.vue"),
+      redirect: "/admin/home",
+      children: [
+        {
+          path: "home",
+          name: "admin-home",
+          component: () => import("@/Pages/Admin/HomeAdmin.vue"),
+        },
+        {
+          path: "users",
+          name: "admin-users",
+          component: () => import("@/Pages/Admin/UsersAdmin.vue"),
+        },
+        {
+          path: "scanninger",
+          name: "admin-scanninger",
+          component: () => import("@/Pages/Admin/ScanningerAdmin.vue"),
+        },
+        {
+          path: "categories",
+          name: "admin-categories",
+          component: () => import("@/Pages/Admin/PantCategoryAdmin.vue"),
+        },
+        {
+          path: "activity-statuses",
+          name: "admin-activity-statuses",
+          component: () => import("@/Pages/Admin/ActivityStatusAdmin.vue"),
+        },
+        {
+          path: "products",
+          name: "admin-products",
+          component: () => import("@/Pages/Admin/ProductsAdmin.vue"),
+        },
+        {
+          path: "report-reasons",
+          name: "admin-report-reasons",
+          component: () => import("@/Pages/Admin/ReportReasonAdmin.vue"),
+        },
+        {
+          path: "reports",
+          name: "admin-reports",
+          component: () => import("@/Pages/Admin/ReportAdmin.vue"),
+        },
+        {
+          path: "activity-items",
+          name: "admin-activity-items",
+          component: () => import("@/Pages/Admin/ActivityItemAdmin.vue"),
+        },
+      ],
+    },
   ],
 });
 

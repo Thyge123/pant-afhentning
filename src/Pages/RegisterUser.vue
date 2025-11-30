@@ -46,127 +46,143 @@
 </template>
 
 <script>
-  import LogoBanner from "@/components/LogoBanner.vue";
-  import RegisterStepper from "@/components/RegisterStepper.vue";
+import LogoBanner from "@/components/LogoBanner.vue";
+import RegisterStepper from "@/components/RegisterStepper.vue";
+//import { createUser } from "@/services/users.api.js";
+import UserDataService from "@/services/UserDataService";
 
-  export default {
-    components: {
-      LogoBanner,
-      RegisterStepper,
-    },
-    name: "RegisterUser",
-    data() {
-      return {
-        isLoading: true,
-        valid: false,
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        city: "",
-        zip: "",
-        street: "",
-        birthdate: "",
-        creatingUser: false,
-      };
-    },
-    computed: {
-      buttonStyle() {
-        if (this.isFormComplete) {
-          return {
-            backgroundColor: "#93c14e",
-            color: "white",
-          };
-        } else {
-          return {
-            backgroundColor: "#cccccc",
-            color: "#666666",
-          };
-        }
-      },
-      isFormComplete() {
-        return (
-          this.firstname &&
-          this.lastname &&
-          this.birthdate &&
-          this.email &&
-          this.city &&
-          this.zip &&
-          this.street &&
-          this.password &&
-          this.confirmPassword &&
-          this.password === this.confirmPassword &&
-          this.valid
-        );
-      },
-    },
-    methods: {
-      CreateUser() {
-        const userData = {
-          username: this.username,
-          email: this.email,
-          password: this.password,
+export default {
+  components: {
+    LogoBanner,
+    RegisterStepper,
+  },
+  name: "RegisterUser",
+  data() {
+    return {
+      isLoading: true,
+      valid: false,
+      firstname: "",
+      lastname: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      city: "",
+      zip: "",
+      street: "",
+      birthdate: "",
+      creatingUser: false,
+    };
+  },
+  computed: {
+    buttonStyle() {
+      if (this.isFormComplete) {
+        return {
+          backgroundColor: "#93c14e",
+          color: "white",
         };
-        console.log("User Data:", userData);
-        this.creatingUser = true;
-        setTimeout(() => {
+      } else {
+        return {
+          backgroundColor: "#cccccc",
+          color: "#666666",
+        };
+      }
+    },
+    isFormComplete() {
+      return (
+        this.firstname &&
+        this.lastname &&
+        this.birthdate &&
+        this.email &&
+        this.city &&
+        this.zip &&
+        this.street &&
+        this.password &&
+        this.confirmPassword &&
+        this.password === this.confirmPassword &&
+        this.valid
+      );
+    },
+  },
+  methods: {
+    CreateUser() {
+      const address = `${this.street}, ${this.zip} ${this.city}`;
+
+      const userData = {
+        firstName: this.firstname,
+        lastName: this.lastname,
+        email: this.email,
+        password: this.password,
+        birthDate: this.birthdate,
+        address: address,
+      };
+      console.log("User Data:", userData);
+      this.creatingUser = true;
+
+      UserDataService.create(userData)
+        .then((response) => {
+          console.log("User created successfully:", response);
+          setTimeout(() => {
+            this.creatingUser = false;
+            this.$router.push("/login");
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
           this.creatingUser = false;
-          this.$router.push("/login");
-        }, 2000);
-      },
+        });
     },
-    mounted() {
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 500);
-    },
-  };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
+  },
+};
 </script>
 
 <style scoped>
-  .register-user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+.register-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #d9d9d9;
-    height: 100%;
-  }
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #d9d9d9;
+  height: 100%;
+}
 
-  .input-fields {
-    margin-top: 2%;
-    width: 90%;
-  }
+.input-fields {
+  margin-top: 2%;
+  width: 90%;
+}
 
-  button {
-    background-color: #93c14e;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    width: 50%;
-    margin: 20px auto 0 auto;
-    border-radius: 5px;
-  }
+button {
+  background-color: #93c14e;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  margin: 20px auto 0 auto;
+  border-radius: 5px;
+}
 
-  .login-link {
-    margin: 1rem auto;
-  }
+.login-link {
+  margin: 1rem auto;
+}
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s ease;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
 
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-  }
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

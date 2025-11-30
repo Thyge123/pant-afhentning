@@ -1,264 +1,136 @@
 <template>
-  <section class="app">
-    <section class="afhentning">
-      <h3>Pant til afhentning</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Adresse</th>
-            <th class="right">Antal</th>
-            <th class="right">Kr.</th>
-            <th class="right"></th>
-            <th class="right"></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            v-for="item in toPickup"
-            :key="item.address"
-            style="cursor: pointer"
+  <v-container fluid>
+    <v-sheet>
+      <v-data-table
+        :headers="headers"
+        :items="filteredActivities"
+        class="elevation-1"
+      >
+        <template #[`item.actions`]="{ item }">
+          <v-btn small class="bg-primary text-white" @click="GoToMap(item)">
+            Vejvisning
+          </v-btn>
+          <v-btn
+            small
+            class="bg-secondary text-white"
+            @click="moveToPickedUp(item)"
           >
-            <td>{{ item.address }}</td>
-            <td class="right">{{ item.count }}</td>
-            <td class="right">{{ item.amount }}</td>
-            <td class="right">
-              <v-icon
-                icon="mdi-map-marker"
-                color="blue"
-                @click="GoToMap(item)"
-              ></v-icon>
-            </td>
-            <td class="right">
-              <v-icon
-                icon="mdi-check"
-                color="green"
-                @click="moveToPickedUp(item)"
-              ></v-icon>
-            </td>
-          </tr>
-        </tbody>
+            Hentet
+          </v-btn>
+        </template>
+        <template v-slot:no-data>
+          Ingen aktiviteter til afhentning fundet.
+        </template>
+      </v-data-table>
+      <br />
+      <br />
+      <v-divider></v-divider>
+      <br />
 
-        <tfoot>
-          <tr>
-            <td>Total</td>
-            <td class="right">{{ pickupTotal.count }}</td>
-            <td class="right">{{ pickupTotal.amount }}</td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </section>
-
-    <section class="hentet">
-      <h3>Pant allerede hentet</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Adresse</th>
-            <th class="right">Dato</th>
-            <th class="right">Antal</th>
-            <th class="right">Kr.</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for="item in pickedUp" :key="item.address + item.date">
-            <td>{{ item.address }}</td>
-            <td class="right">{{ item.date }}</td>
-            <td class="right">{{ item.count }}</td>
-            <td class="right">{{ item.amount }}</td>
-          </tr>
-        </tbody>
-
-        <tfoot>
-          <tr>
-            <td>Total</td>
-            <td></td>
-            <td class="right">{{ pickedUpTotal.count }}</td>
-            <td class="right">{{ pickedUpTotal.amount }}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </section>
-  </section>
+      <v-data-table
+        :headers="headers"
+        :items="PickedUpActivities"
+        class="elevation-1 mt-4"
+      >
+        <template v-slot:no-data>
+          Ingen afhentede aktiviteter fundet.
+        </template>
+      </v-data-table>
+    </v-sheet>
+  </v-container>
 </template>
 
 <script>
+import ActivityDataService from "@/services/ActivityDataService";
+
 export default {
   data() {
     return {
-      toPickup: [
-        { address: "21 Park Lane Circle, Ontario", count: 7, amount: 100 },
-        { address: "221B Baker Street", count: 10, amount: 150 },
-        { address: "Glenfinnan, Skotland", count: 20, amount: 200 },
-        { address: "Dubrovnik, Kroatien", count: 20, amount: 200 },
-      ],
-
-      pickedUp: [
-        {
-          address: "Berlin, Tyskland",
-          date: "20/02 - 1989",
-          count: 7,
-          amount: 150,
-        },
-      ],
       SelectedAddress: "",
+      activities: [],
+      headers: [
+        { title: "Dato", key: "formattedDate" },
+        { title: "Adresse", key: "user.address" },
+        { title: "Antal", key: "totalAmount" },
+        { title: "Beløb", key: "totalPrice" },
+        { title: "", key: "actions", sortable: false },
+      ],
+      headers2: [{ title: "Total Antal", key: "totalAmount" }],
     };
   },
 
   computed: {
-    pickupTotal() {
-      return this.toPickup.reduce(
-        (sum, item) => (
-          (sum.count += item.count), (sum.amount += item.amount), sum
-        ),
-        { count: 0, amount: 0 }
-      );
+    filteredActivities() {
+      return this.activities
+        .filter((a) => a.statusId === 2)
+        .map((activity) => ({
+          ...activity,
+          totalPrice: this.calculateTotalPrice(activity),
+          totalAmount: this.calculateTotalAmount(activity),
+          formattedDate: this.formatDate(activity.date),
+        }));
     },
-
-    pickedUpTotal() {
-      return this.pickedUp.reduce(
-        (sum, item) => (
-          (sum.count += item.count), (sum.amount += item.amount), sum
-        ),
-        { count: 0, amount: 0 }
-      );
+    PickedUpActivities() {
+      return this.activities
+        .filter((a) => a.statusId === 3)
+        .map((activity) => ({
+          ...activity,
+          totalAmount: this.calculateTotalAmount(activity),
+          totalPrice: this.calculateTotalPrice(activity),
+          formattedDate: this.formatDate(activity.date),
+        }));
     },
   },
-
   methods: {
+    GetAllActivities() {
+      ActivityDataService.getAll()
+        .then((response) => {
+          this.activities = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     moveToPickedUp(item) {
-      this.toPickup = this.toPickup.filter((i) => i !== item);
-      this.pickedUp.push({
-        address: item.address,
-        count: item.count,
-        amount: item.amount,
-        date: new Date().toLocaleDateString("da-DK"),
-      });
+      const updatedItem = { ...item, statusId: 3 };
+      ActivityDataService.update(item.activityId, updatedItem)
+        .then(() => {
+          this.GetAllActivities();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     GoToMap(item) {
-      this.SelectedAddress = item.address;
+      this.SelectedAddress = item.user.address;
       this.$router.push({
         name: "Vejvisning",
         params: { address: this.SelectedAddress },
       });
     },
+    calculateTotalPrice(activity) {
+      if (!activity?.activityItems) return 0;
+      return activity.activityItems.reduce(
+        (sum, item) => sum + item.quantity * item.product.category.price,
+        0
+      );
+    },
+    calculateTotalAmount(activity) {
+      if (!activity?.activityItems) return 0;
+      return activity.activityItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+    },
+    formatDate(date) {
+      if (!date) return "";
+      return new Date(date).toLocaleDateString();
+    },
+  },
+  created() {
+    this.GetAllActivities();
   },
 };
 </script>
 
-<style scoped>
-.app {
-  background: white;
-  color: #333;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.header-title {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  color: black;
-}
-
-.topbar {
-  background: #555;
-  padding: 10px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.afhentning,
-.hentet {
-  background: white;
-  color: #333;
-  border-radius: 12px;
-  padding: 10px;
-  margin-top: 14px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-}
-
-.afhentning h3,
-.hentet h3 {
-  margin: 4px 0 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.afhentning table,
-.hentet table {
-  width: 100%;
-  font-size: 13px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-th,
-td {
-  padding: 6px;
-  border-bottom: 1px solid #eee;
-  background: #fff; /* gør felterne hvide med let skygge omkring tabellen */
-}
-
-tfoot td {
-  background: #ffffff;
-  font-weight: bold;
-}
-
-th {
-  text-align: left;
-  font-weight: 600;
-}
-
-td.right,
-th.right {
-  text-align: right;
-}
-
-.afhentning h3 {
-  color: red;
-}
-.hentet h3 {
-  color: green;
-}
-
-.afhentning thead th:nth-child(1),
-.afhentning thead th:nth-child(2),
-.afhentning thead th:nth-child(3) {
-  color: red;
-}
-
-.hentet thead th:nth-child(1),
-.hentet thead th:nth-child(2),
-.hentet thead th:nth-child(3),
-.hentet thead th:nth-child(4) {
-  color: green;
-}
-
-.afhentning tbody td:nth-child(1),
-.afhentning tbody td:nth-child(2),
-.afhentning tbody td:nth-child(3) {
-  color: red;
-}
-
-.hentet tbody td:nth-child(1),
-.hentet tbody td:nth-child(2),
-.hentet tbody td:nth-child(3),
-.hentet tbody td:nth-child(4) {
-  color: green;
-}
-
-.afhentning tfoot td {
-  color: red;
-}
-
-.hentet tfoot td {
-  color: green;
-}
-</style>
+<style scoped></style>

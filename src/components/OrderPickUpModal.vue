@@ -30,76 +30,96 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="closeDialog">Annuller</v-btn>
-        <v-btn
-          color="primary"
-          @click="confirmPickUp"
-          :disabled="
-            !selectedActivity || !isActivitySelectable(selectedActivity)
-          "
-          >Bekræft</v-btn
-        >
+        <v-btn color="primary" @click="confirmPickUp">Bekræft</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-  export default {
-    name: "OrderPickUpModal",
-    inject: ["activities"],
+import ActivityDataService from "@/services/ActivityDataService";
+export default {
+  name: "OrderPickUpModal",
+  inject: ["activities"],
+  emits: ["close-dialog", "activity-updated"],
+  data() {
+    return {
+      selectedActivity: null,
+    };
+  },
 
-    data() {
-      return {
-        selectedActivity: null,
-      };
-    },
-
-    computed: {
+  computed: {
+    /*
       SavedActivities() {
         return this.activities.filter((activity) => activity.status === 1);
       },
-      selectItems() {
-        return this.SavedActivities.map((activity) => ({
-          title: `${activity.date} - ${activity.price} kr.`,
-          value: activity.id,
-          disabled: activity.price < 100,
-        }));
-      },
+      */
+    selectItems() {
+      return this.activities.map((activity) => ({
+        title: `#${activity.activityId} - ${new Date(
+          activity.date
+        ).toLocaleDateString()} - ${this.totalPrice} kr.`,
+        value: activity.activityId,
+        //disabled: this.totalPrice < 100,
+      }));
     },
-    methods: {
-      closeDialog() {
-        this.$emit("close-dialog");
-      },
-      isActivitySelectable(selectedActivity) {
-        if (!selectedActivity) return false;
-        const activity = this.activities.find(
-          (act) => act.id === selectedActivity.value
+    totalPrice() {
+      if (!this.activities || this.activities.length === 0) return 0;
+
+      return this.activities.reduce((total, activity) => {
+        if (!activity.activityItems) return total;
+
+        const activityTotal = activity.activityItems.reduce(
+          (sum, item) => sum + item.quantity * item.product.category.price,
+          0
         );
-        return activity && activity.price >= 100;
-      },
-      confirmPickUp() {
-        const activity = this.selectedActivity
-          ? this.activities.find(
-              (act) => act.id === this.selectedActivity.value
-            )
-          : null;
-        if (activity && activity.price >= 100) {
-          activity.status = 2;
-        }
-        this.closeDialog();
-      },
+        return total + activityTotal;
+      }, 0);
     },
-  };
+  },
+  methods: {
+    closeDialog() {
+      this.$emit("close-dialog");
+    },
+    isActivitySelectable(selectedActivity) {
+      if (!selectedActivity) return false;
+      const activity = this.activities.find(
+        (act) => act.id === selectedActivity.value
+      );
+      return activity;
+    },
+    confirmPickUp() {
+      const activity = this.selectedActivity
+        ? this.activities.find(
+            (act) => act.activityId === this.selectedActivity.value
+          )
+        : null;
+      const updatedActivity = {
+        ...activity,
+        statusId: 2, // Set status to "Afhenter"
+      };
+      ActivityDataService.update(activity.activityId, updatedActivity)
+        .then(() => {
+          // Emit event to parent to refresh activities
+          this.$emit("activity-updated", activity.userId);
+          this.closeDialog();
+        })
+        .catch((error) => {
+          console.error("Error updating activity:", error);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .close-button {
-    position: absolute;
-    top: 18px;
-    right: 10px;
-  }
+.close-button {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+}
 
-  .v-select {
-    margin: 0px 20px;
-  }
+.v-select {
+  margin: 0px 20px;
+}
 </style>

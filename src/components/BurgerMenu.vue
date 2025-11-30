@@ -47,6 +47,13 @@
       </v-list-item>
       <v-list-item prepend-icon="mdi-phone-outline" link title="Kontakt os">
       </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-account"
+        @click="$router.push('/admin/home')"
+        link
+        title="Admin"
+      >
+      </v-list-item>
       <v-divider />
       <v-list-item
         prepend-icon="mdi-logout"
@@ -149,91 +156,91 @@
 </template>
 
 <script>
-  export default {
-    name: "BurgerMenu",
-    props: {
-      isOpen: {
-        type: Boolean,
-        default: false,
-      },
+export default {
+  name: "BurgerMenu",
+  props: {
+    isOpen: {
+      type: Boolean,
+      default: false,
     },
-    emits: ["toggle-menu"],
-    data() {
-      return {
-        isOpenLocal: this.isOpen,
-        pricesDialog: false,
-        imageURL:
-          "https://www.greatplacetowork.dk/images/Arbejdspladsprofiler/Dansk-Retursystem/Dansk-Retursystem-logo-profil.webp",
-      };
+  },
+  emits: ["toggle-menu"],
+  data() {
+    return {
+      isOpenLocal: this.isOpen,
+      pricesDialog: false,
+      imageURL:
+        "https://www.greatplacetowork.dk/images/Arbejdspladsprofiler/Dansk-Retursystem/Dansk-Retursystem-logo-profil.webp",
+    };
+  },
+  methods: {
+    toggleMenu() {
+      this.isOpenLocal = !this.isOpenLocal;
     },
-    methods: {
-      toggleMenu() {
-        this.isOpenLocal = !this.isOpenLocal;
-      },
-      showPricesDialog() {
-        this.isOpenLocal = false;
-        this.pricesDialog = true;
-      },
-      logout() {
-        this.isOpenLocal = false;
-        this.$router.push("/login");
-      },
+    showPricesDialog() {
+      this.isOpenLocal = false;
+      this.pricesDialog = true;
     },
-    watch: {
-      isOpen(newVal) {
-        this.isOpenLocal = newVal;
-      },
-      isOpenLocal(newVal) {
-        this.$emit("toggle-menu", newVal);
-      },
+    logout() {
+      this.isOpenLocal = false;
+      this.$router.push("/login");
     },
-  };
+  },
+  watch: {
+    isOpen(newVal) {
+      this.isOpenLocal = newVal;
+    },
+    isOpenLocal(newVal) {
+      this.$emit("toggle-menu", newVal);
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .app-bar-padding {
-    padding: 0 10px !important;
-  }
-  .v-navigation-drawer {
-    height: 14.25rem !important; /* 11.5 REM height */
-    overflow-y: hidden !important;
-  }
+.app-bar-padding {
+  padding: 0 10px !important;
+}
+.v-navigation-drawer {
+  height: 14.25rem !important; /* 11.5 REM height */
+  overflow-y: hidden !important;
+}
 
-  :deep(.v-navigation-drawer__content) {
-    overflow-y: hidden !important;
-  }
+:deep(.v-navigation-drawer__content) {
+  overflow-y: hidden !important;
+}
 
-  .log-out {
-    color: red;
-  }
+.log-out {
+  color: red;
+}
 
-  :deep(.v-list-item__spacer) {
-    width: 0.25rem !important;
-  }
+:deep(.v-list-item__spacer) {
+  width: 0.25rem !important;
+}
 
-  .icon-fade-enter-active,
-  .icon-fade-leave-active {
-    transition: all 0.3s ease;
-  }
+.icon-fade-enter-active,
+.icon-fade-leave-active {
+  transition: all 0.3s ease;
+}
 
-  .icon-fade-enter-from {
-    opacity: 0;
-  }
+.icon-fade-enter-from {
+  opacity: 0;
+}
 
-  .icon-fade-leave-to {
-    opacity: 0;
-  }
+.icon-fade-leave-to {
+  opacity: 0;
+}
 
-  .icon-fade-enter-to,
-  .icon-fade-leave-from {
-    opacity: 1;
-  }
+.icon-fade-enter-to,
+.icon-fade-leave-from {
+  opacity: 1;
+}
 
-  .transparent {
-    background-color: transparent !important;
-  }
+.transparent {
+  background-color: transparent !important;
+}
 
-  .v-dialog .v-card {
-    border-radius: 8px !important;
-  }
+.v-dialog .v-card {
+  border-radius: 8px !important;
+}
 </style>
