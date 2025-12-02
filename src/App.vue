@@ -18,6 +18,7 @@ import BurgerMenu from "./components/BurgerMenu.vue";
 import BottomMenuBar from "./components/BottomMenuBar.vue";
 import NavigationHeader from "./components/NavigationHeader.vue";
 import ActivityDataService from "./services/ActivityDataService";
+import UserDataService from "./services/UserDataService";
 import { computed } from "vue";
 export default {
   name: "App",
@@ -63,6 +64,29 @@ export default {
           console.error("Error fetching user activities:", e);
         });
     },
+    autoLoginAdmin() {
+      // Automatically log in Admin when app starts
+      const loginData = {
+        email: "admin@drs.dk",
+        password: "admin1234"
+      };
+      
+      UserDataService.login(loginData)
+        .then((response) => {
+          console.log("Auto-logged in Admin:", response.data);
+          if (response.data.message === "Login successful") {
+            this.updateLoggedInUser(response.data.user);
+            this.$router.push("/");
+          }
+        })
+        .catch((e) => {
+          console.error("Auto-login failed:", e);
+        });
+    },
+  },
+  mounted() {
+    // Auto-login when app starts
+    this.autoLoginAdmin();
   },
   provide() {
     return {
