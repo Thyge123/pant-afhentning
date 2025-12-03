@@ -44,75 +44,102 @@
     icon="mdi-barcode-scan"
     @click="$router.push('/scan')"
   ></v-fab>
+  <!--Chat Icon-->
+  <v-fab
+    v-if="
+      !isOnScannerPage &&
+      !isOnLoginPage &&
+      !isOnAdminPage &&
+      !isOnAfhenterPage &&
+      !isOnChatPage &&
+      !isOnProfilPage &&
+      !isOnPantDetailsPage
+    "
+    class="centered-fab"
+    icon="mdi-chat"
+    style="bottom: 80px; right: -5px; left: auto"
+  ></v-fab>
 </template>
 
 <script>
-export default {
-  name: "BottomMenuBar",
+  export default {
+    name: "BottomMenuBar",
 
-  computed: {
-    isOnScannerPage() {
-      return this.$route.path === "/scan";
+    computed: {
+      isOnScannerPage() {
+        return this.$route.path === "/scan";
+      },
+      isOnLoginPage() {
+        const loginPaths = ["/login", "/register"];
+        return loginPaths.includes(this.$route.path);
+      },
+      isOnAdminPage() {
+        return this.$route.path.startsWith("/admin");
+      },
+      isOnAfhenterPage() {
+        return this.$route.path === "/afhenter";
+      },
+      isOnChatPage() {
+        return this.$route.path === "/chat";
+      },
+      isOnProfilPage() {
+        return this.$route.path === "/min-profil";
+      },
+      isOnPantDetailsPage() {
+        return this.$route.path.startsWith("/scanning");
+      },
     },
-    isOnLoginPage() {
-      const loginPaths = ["/login", "/register"];
-      return loginPaths.includes(this.$route.path);
-    },
-    isOnAdminPage() {
-      return this.$route.path.startsWith("/admin");
-    },
-  },
-};
+  };
 </script>
 
 <style scoped>
-.fade-in {
-  animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
   }
-  to {
-    opacity: 1;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
-}
-.v-bottom-navigation {
-  height: 70px !important;
-  border-radius: 10px 10px 0px 0px !important;
-}
-
-.v-icon {
-  font-size: 30px !important;
-  color: #707070de !important;
-}
-
-.centered-fab {
-  position: fixed !important;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999 !important;
-}
-
-.active-nav {
-  background-color: rgba(147, 193, 78, 0.1) !important;
-  border-radius: 10px 10px 0px 0px !important;
-}
-
-.active-nav .v-icon {
-  color: #93c14e !important;
-  animation: bounce 0.3s ease;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
+  .v-bottom-navigation {
+    height: 70px !important;
+    border-radius: 10px 10px 0px 0px !important;
   }
-  50% {
-    transform: translateY(-5px);
+
+  .v-icon {
+    font-size: 30px !important;
+    color: #707070de !important;
   }
-}
+
+  .centered-fab {
+    position: fixed !important;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999 !important;
+  }
+
+  .active-nav {
+    background-color: rgba(147, 193, 78, 0.1) !important;
+    border-radius: 10px 10px 0px 0px !important;
+  }
+
+  .active-nav .v-icon {
+    color: #93c14e !important;
+    animation: bounce 0.3s ease;
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
 </style>
