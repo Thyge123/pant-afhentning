@@ -11,7 +11,14 @@
             v-if="isActivityFinished"
             @open-report-dialog="showReportModal = true"
           />
+          <div class="chat-icon">
+            <div class="text-subtitle-2"></div>
+            <div class="text-body-1">
+              <v-icon> mdi-chat </v-icon>
+            </div>
+          </div>
         </v-card-title>
+        <!--Chat icon-->
 
         <v-card-text v-if="activityDetails">
           <div class="details-grid">
@@ -45,7 +52,7 @@
                 {{ item.product.name }} - {{ item.quantity }} stk.
               </v-list-item-title>
               <v-list-item-subtitle>
-                Pant: {{ item.product.category.price }}
+                Pant: {{ item.product.category.name }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-list>
@@ -82,52 +89,52 @@
 </template>
 
 <script>
-import BugReportButton from "../components/BugReportButton.vue";
-import ReportModal from "../components/ReportModal.vue";
-import ActivityDataService from "@/services/ActivityDataService";
-export default {
-  name: "PantScanDetails",
-  components: {
-    BugReportButton,
-    ReportModal,
-  },
-  data() {
-    return {
-      activityDetails: null,
-      showReportModal: false,
-      isLoading: true,
-    };
-  },
-  inject: [/*"activities",*/ "statusMap"],
-  computed: {
-    priceTotal() {
-      if (!this.activityDetails || !this.activityDetails.activityItems)
-        return 0;
+  import BugReportButton from "../components/BugReportButton.vue";
+  import ReportModal from "../components/ReportModal.vue";
+  import ActivityDataService from "@/services/ActivityDataService";
+  export default {
+    name: "PantScanDetails",
+    components: {
+      BugReportButton,
+      ReportModal,
+    },
+    data() {
+      return {
+        activityDetails: null,
+        showReportModal: false,
+        isLoading: true,
+      };
+    },
+    inject: [/*"activities",*/ "statusMap"],
+    computed: {
+      priceTotal() {
+        if (!this.activityDetails || !this.activityDetails.activityItems)
+          return 0;
 
-      return this.activityDetails.activityItems.reduce(
-        (sum, item) => sum + item.quantity * item.product.category.price,
-        0
-      );
+        return this.activityDetails.activityItems.reduce(
+          (sum, item) => sum + item.quantity * item.product.category.price,
+          0
+        );
+      },
+      totalAmount() {
+        if (!this.activityDetails || !this.activityDetails.activityItems)
+          return 0;
+        return this.activityDetails.activityItems.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+      },
+      isActivityFinished() {
+        return this.activityDetails && this.activityDetails.statusId === 4;
+      },
+      formattedDate() {
+        if (!this.activityDetails) return "";
+        const date = new Date(this.activityDetails.date);
+        return date.toLocaleDateString();
+      },
     },
-    totalAmount() {
-      if (!this.activityDetails || !this.activityDetails.activityItems)
-        return 0;
-      return this.activityDetails.activityItems.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      );
-    },
-    isActivityFinished() {
-      return this.activityDetails && this.activityDetails.statusId === 4;
-    },
-    formattedDate() {
-      if (!this.activityDetails) return "";
-      const date = new Date(this.activityDetails.date);
-      return date.toLocaleDateString();
-    },
-  },
-  methods: {
-    /*
+    methods: {
+      /*
     fetchActivityDetails(activityId) {
       this.activityDetails = this.activities.find(
         (activity) => activity.id === parseInt(activityId)
@@ -135,50 +142,55 @@ export default {
       console.log("Fetched activity details:", this.activityDetails);
     },
     */
-    GetActivityById(id) {
-      return ActivityDataService.get(id)
-        .then((response) => {
-          this.activityDetails = response.data;
-          console.log("Fetched activity details:", this.activityDetails);
-          this.isLoading = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isLoading = false;
-        });
+      GetActivityById(id) {
+        return ActivityDataService.get(id)
+          .then((response) => {
+            this.activityDetails = response.data;
+            console.log("Fetched activity details:", this.activityDetails);
+            this.isLoading = false;
+          })
+          .catch((e) => {
+            console.log(e);
+            this.isLoading = false;
+          });
+      },
     },
-  },
-  mounted() {
-    const activityId = this.$route.params.id;
-    // Fetch and display details based on activityId
-    this.GetActivityById(activityId);
-  },
-};
+    mounted() {
+      const activityId = this.$route.params.id;
+      // Fetch and display details based on activityId
+      this.GetActivityById(activityId);
+    },
+  };
 </script>
 
 <style scoped>
-.pant-details {
-  max-width: 800px;
-  margin: auto;
-}
+  .pant-details {
+    max-width: 800px;
+    margin: auto;
+  }
 
-.details-grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
+  .details-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
 
-.totals-container {
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  gap: 16px;
-}
+  .totals-container {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    gap: 16px;
+  }
 
-.total-item {
-  flex: 1;
-  padding: 16px;
-  border-radius: 4px;
-  background-color: #f5f5f5;
-}
+  .total-item {
+    flex: 1;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+  }
+
+  .chat-icon {
+    cursor: pointer;
+    color: #707070de;
+  }
 </style>
