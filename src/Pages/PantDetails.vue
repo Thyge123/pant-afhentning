@@ -11,15 +11,10 @@
             v-if="isActivityFinished"
             @open-report-dialog="showReportModal = true"
           />
-          <div class="chat-icon">
-            <div class="text-subtitle-2"></div>
-            <div class="text-body-1">
-              <v-icon> mdi-chat </v-icon>
-            </div>
+          <div class="chat-icon" @click="showChatModal = true">
+            <v-fab class="centered-fab" icon="mdi-chat"></v-fab>
           </div>
         </v-card-title>
-        <!--Chat icon-->
-
         <v-card-text v-if="activityDetails">
           <div class="details-grid">
             <div>
@@ -85,24 +80,37 @@
       @close-report-dialog="showReportModal = false"
       :activityId="activityDetails.id"
     />
+
+    <ChatModal
+      v-if="showChatModal"
+      :model-value="showChatModal"
+      @close="showChatModal = false"
+      :activityId="activityDetails.activityId"
+      :currentUserId="activityDetails.userId"
+    />
   </v-container>
 </template>
 
 <script>
   import BugReportButton from "../components/BugReportButton.vue";
+  import ChatModal from "../components/ChatModal.vue";
   import ReportModal from "../components/ReportModal.vue";
   import ActivityDataService from "@/services/ActivityDataService";
+
   export default {
     name: "PantScanDetails",
     components: {
       BugReportButton,
+      ChatModal,
       ReportModal,
     },
     data() {
       return {
         activityDetails: null,
         showReportModal: false,
+        showChatModal: false,
         isLoading: true,
+        messages: [],
       };
     },
     inject: [/*"activities",*/ "statusMap"],
@@ -191,6 +199,6 @@
 
   .chat-icon {
     cursor: pointer;
-    color: #707070de;
+    color: #000000de;
   }
 </style>
