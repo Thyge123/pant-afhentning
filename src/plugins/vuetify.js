@@ -18,6 +18,7 @@ export default createVuetify({
           light: '#B0B0B0',
           lighter:'#D9D9D9',
           dark: '#585858',
+          white: '#FFFFFF',
           error: '#FF0000',
           warning: '#FFA500',
           alert: '#FFFF00',

@@ -1,8 +1,8 @@
 <template>
-  <v-card class="bg-primary align-center pa-2 h-100" @click="openDialog">
-    <p><v-icon icon="mdi-truck-fast"></v-icon></p>
-    <p>Anmod om afhentning</p>
-  </v-card>
+    <v-card class="bg-primary align-center pa-1 pt-4 pb-4 h-100" @click="openDialog">
+      <p><v-icon icon="mdi-truck-fast"></v-icon></p>
+      <p class="text-no-wrap text-button">Anmod afhentning</p>
+    </v-card>
 </template>
 
 <script>
@@ -22,10 +22,3 @@
     },
   };
 </script>
-
-<style scoped>
-  .v-card {
-    cursor: pointer;
-    width: 45%;
-  }
-</style>
