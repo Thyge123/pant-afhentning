@@ -28,7 +28,13 @@
       ></v-btn>
     </transition>
   </v-app-bar>
-  <v-navigation-drawer location="top" temporary v-model="isOpenLocal" app>
+  <v-navigation-drawer 
+    location="top" 
+    temporary 
+    v-model="isOpenLocal" 
+    app
+    class="slide-menu"
+  >
     <v-list density="compact" nav>
       <v-list-item prepend-icon="mdi-information-outline" link title="Om appen">
       </v-list-item>
@@ -61,7 +67,7 @@
         title="Admin"
       >
       </v-list-item>
-      <v-divider />
+      <v-divider thickness="2" class="my-2" />
       <v-list-item
         prepend-icon="mdi-logout"
         link
@@ -208,13 +214,21 @@ export default {
 .app-bar-padding {
   padding: 0 10px !important;
 }
-.v-navigation-drawer {
-  height: 14.25rem !important; /* 11.5 REM height */
-  overflow-y: hidden !important;
+.slide-menu {
+  height: auto !important;
+  min-height: 20rem !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  transform-origin: top center !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease !important;
+}
+
+.slide-menu.v-navigation-drawer--temporary:not(.v-navigation-drawer--active) {
+  transform: translateY(-100%) !important;
 }
 
 :deep(.v-navigation-drawer__content) {
-  overflow-y: hidden !important;
+  overflow-y: auto !important;
 }
 
 .log-out {
