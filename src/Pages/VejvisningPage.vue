@@ -3,21 +3,19 @@
     <section class="map-container">
       <p class="address-label">Adresse:</p>
       <p class="address">{{ address }}</p>
-
-      <!-- Her vises billedet -->
-      <img :src="kortImage" alt="Kortvejvisning" class="map-image" />
+      <GoogleMaps :address="address" />  
     </section>
   </section>
 </template>
 
 <script>
-import kortImage from "@/assets/kort.png";
+import GoogleMaps from "../components/GoogleMaps.vue";
 
 export default {
+  components: { GoogleMaps },
   name: "VejvisningView",
   data() {
     return {
-      kortImage,
       address: null,
     };
   },
@@ -57,7 +55,6 @@ export default {
 
 .map-container {
   background: white;
-  margin-top: 16px;
   border-radius: 10px;
   padding: 10px;
   text-align: center;

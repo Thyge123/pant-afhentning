@@ -18,6 +18,7 @@ import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import ImageBarcodeReader from "./components/barcodeScanner/ImageBarcodeReader.vue";
 import StreamBarcodeReader from "./components/barcodeScanner/StreamBarcodeReader.vue";
+import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 export { ImageBarcodeReader, StreamBarcodeReader };
 
@@ -131,4 +132,9 @@ const router = createRouter({
 
 const app = createApp(App);
 
-app.use(vuetify).use(router).mount("#app");
+app.use(vuetify).use(router).use(VueGoogleMaps, {
+    load: {
+        key: 'AIzaSyDfwiKzQHkCHYBlAeg_4a7uWXaihXzUrXM',
+        // language: 'dk',
+    },
+}).mount("#app");
