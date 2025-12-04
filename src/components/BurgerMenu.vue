@@ -45,6 +45,13 @@
         title="Pant priser"
       >
       </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-map"
+        @click="$router.push('/pant-locations')"
+        link
+        title="Pant steder"
+      >
+      </v-list-item>
       <v-list-item prepend-icon="mdi-phone-outline" link title="Kontakt os">
       </v-list-item>
       <v-list-item
