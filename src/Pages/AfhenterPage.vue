@@ -2,21 +2,21 @@
   <v-container fluid>
     <v-sheet>
 
-      <!-- TABEL 1 -->
+   
       <v-data-table
         :headers="headersToShow"
         :items="filteredActivities"
         class="elevation-1"
       >
         <template #[`item.actions`]="{ item }">
-          <!-- Før accept -->
+       
           <div v-if="!item.accepted && !anyAccepted">
             <v-btn small class="bg-primary text-white" @click="acceptTask(item)">
               Accepter
             </v-btn>
           </div>
 
-          <!-- Efter accept -->
+    
           <div v-else-if="item.accepted">
             <v-btn small class="bg-primary text-white" @click="GoToMap(item)">
               Vejvisning
@@ -37,7 +37,7 @@
       <v-divider></v-divider>
       <br />
 
-      <!-- TABEL 2 -->
+   
       <v-data-table
         :headers="pickedHeaders"
         :items="PickedUpActivities"
@@ -128,25 +128,25 @@ export default {
     },
 
     acceptTask(item) {
-      // Opdater lokalt med det samme
+     
       const index = this.activities.findIndex(a => a.activityId === item.activityId);
       if (index !== -1) {
         this.activities[index].statusId = 20; // accepteret
       }
 
-      // Opdater backend
+   
       ActivityDataService.update(item.activityId, { ...item, statusId: 20 })
         .catch(console.log);
     },
 
     moveToPickedUp(item) {
-      // Marker lokalt som hentet
+     
       const index = this.activities.findIndex(a => a.activityId === item.activityId);
       if (index !== -1) {
         this.activities[index].statusId = 3;
       }
 
-      // Opdater backend
+     
       ActivityDataService.update(item.activityId, { ...item, statusId: 3 })
         .catch(console.log);
     },
