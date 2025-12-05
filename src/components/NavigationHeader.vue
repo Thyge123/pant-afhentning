@@ -29,6 +29,8 @@ export default {
         "/profil": "Min Profil",
         "/afhenter": "Afhenter",
         "/vejvisning": "Vejvisning",
+        "/pant-locations": "Pant lokationer",
+        
       };
 
       // Check if current path starts with any of the keys

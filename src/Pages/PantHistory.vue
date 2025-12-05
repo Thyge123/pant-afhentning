@@ -143,7 +143,6 @@ export default {
       selectedRow: null,
       expandRow: false,
       isLoading: false,
-      // activities: [],
       statusMap: {
         1: "Gemt",
         2: "Afhenter",
@@ -176,6 +175,11 @@ export default {
       return date.toLocaleDateString();
     },
     ProcessedActivities() {
+      // Ensure activities is available and is an array
+      if (!this.activities || !Array.isArray(this.activities)) {
+        return [];
+      }
+      
       // Calculate totals for each activity before displaying
       const processedActivities = this.activities.map((activity) => {
         const items = activity.activityItems || [];
@@ -241,7 +245,7 @@ export default {
     },
   },
   created() {
-    console.log(this.activities);
+    // console.log(this.activities);
     //this.isLoading = true;
     /*
     ActivityDataService.getAll()

@@ -19,7 +19,7 @@
               disableDefaultUI: true
             }"
         >
-            <!-- Current location marker for Roskilde address -->
+            <!-- Current location marker -->
             <GMapMarker
                 :position="mapCenter"
                 :icon="{ url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' }"
@@ -44,7 +44,7 @@
             />
         </GMapMap>
         
-        <!-- Location Details Dialog - positioned over map only -->
+        <!-- Location Details Dialog -->
         <div 
             v-if="showDetailsDialog" 
             class="dialog-overlay"
@@ -123,19 +123,27 @@ export default {
             }
         }
     },
-    created() {
+    mounted() {
         this.initializeGeocoder();
     },
     methods: {
         initializeGeocoder() {
             this.$nextTick(() => {
                 if (typeof window !== 'undefined' && window.google && window.google.maps) {
-                    // eslint-disable-next-line no-undef
-                    this.geocoder = new google.maps.Geocoder();
-                    // eslint-disable-next-line no-undef
-                    this.directionsService = new google.maps.DirectionsService();
-                    this.geocodeAddress();
-                    this.fetchPantLocations();
+                    try {
+                        // eslint-disable-next-line no-undef
+                        this.geocoder = new google.maps.Geocoder();
+                        // eslint-disable-next-line no-undef
+                        this.directionsService = new google.maps.DirectionsService();
+                        this.geocodeAddress();
+                        this.fetchPantLocations();
+                    } catch (error) {
+                        console.error('Error initializing Google Maps services:', error);
+                        // Retry after a delay
+                        setTimeout(() => {
+                            this.initializeGeocoder();
+                        }, 1000);
+                    }
                 } else {
                     // Retry after a short delay if Google Maps isn't loaded yet
                     setTimeout(() => {
