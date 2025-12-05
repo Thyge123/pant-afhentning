@@ -14,72 +14,72 @@
 </template>
 
 <script>
-import BurgerMenu from "./components/BurgerMenu.vue";
-import BottomMenuBar from "./components/BottomMenuBar.vue";
-import NavigationHeader from "./components/NavigationHeader.vue";
-import ActivityDataService from "./services/ActivityDataService";
-import { computed } from "vue";
-export default {
-  name: "App",
-  components: {
-    BurgerMenu,
-    BottomMenuBar,
-    NavigationHeader,
-  },
-  data: () => ({
-    isMenuOpen: false,
-    loggedInUser: null,
-    activities: [],
-    statusMap: {
-      1: "Gemt",
-      2: "Venter afhentning",
-      3: "Afhentet",
-      4: "Ahentet og betalt",
+  import BurgerMenu from "./components/BurgerMenu.vue";
+  import BottomMenuBar from "./components/BottomMenuBar.vue";
+  import NavigationHeader from "./components/NavigationHeader.vue";
+  import ActivityDataService from "./services/ActivityDataService";
+  import { computed } from "vue";
+  export default {
+    name: "App",
+    components: {
+      BurgerMenu,
+      BottomMenuBar,
+      NavigationHeader,
     },
-  }),
-  methods: {
-    getStatusColor(status) {
-      switch (status) {
-        case 1:
-          return "text-primary"; // Gemt
-        case 2:
-          return "text-warning"; // Venter afhentning
-        case 3:
-          return "text-alert"; // Afhentet
-        case 4:
-          return "text-secondary"; // Afhentet og betalt
-      }
+    data: () => ({
+      isMenuOpen: false,
+      loggedInUser: null,
+      activities: [],
+      statusMap: {
+        1: "Gemt",
+        2: "Venter afhentning",
+        3: "Afhentet",
+        4: "Ahentet og betalt",
+      },
+    }),
+    methods: {
+      getStatusColor(status) {
+        switch (status) {
+          case 1:
+            return "text-primary"; // Gemt
+          case 2:
+            return "text-warning"; // Venter afhentning
+          case 3:
+            return "text-alert"; // Afhentet
+          case 4:
+            return "text-secondary"; // Afhentet og betalt
+        }
+      },
+      updateLoggedInUser(user) {
+        this.loggedInUser = user;
+        this.fetchUserActivities(user.userId);
+      },
+      fetchUserActivities(userId) {
+        ActivityDataService.getByUser(userId)
+          .then((response) => {
+            this.activities = response.data;
+          })
+          .catch((e) => {
+            console.error("Error fetching user activities:", e);
+          });
+      },
     },
-    updateLoggedInUser(user) {
-      this.loggedInUser = user;
-      this.fetchUserActivities(user.userId);
+    provide() {
+      return {
+        activities: computed(() => this.activities),
+        statusMap: this.statusMap,
+        getStatusColor: this.getStatusColor,
+        loggedInUser: () => this.loggedInUser,
+        refreshActivities: this.fetchUserActivities,
+      };
     },
-    fetchUserActivities(userId) {
-      ActivityDataService.getByUser(userId)
-        .then((response) => {
-          this.activities = response.data;
-        })
-        .catch((e) => {
-          console.error("Error fetching user activities:", e);
-        });
-    },
-  },
-  provide() {
-    return {
-      activities: computed(() => this.activities),
-      statusMap: this.statusMap,
-      getStatusColor: this.getStatusColor,
-      loggedInUser: () => this.loggedInUser,
-      refreshActivities: this.fetchUserActivities,
-    };
-  },
 
-  computed: {
-    showMenu() {
-      const hiddenPaths = ["/login", "/register"];
-      return !hiddenPaths.includes(this.$route.path.toLowerCase());
-    },
-    /*
+    computed: {
+      showMenu() {
+        const hiddenPaths = ["/login", "/register"];
+        return !hiddenPaths.includes(this.$route.path.toLowerCase());
+      },
+      /*
     activities() {
       // Definer hvor meget hver pant type er værd
       const pantValues = {
@@ -113,6 +113,6 @@ export default {
       
     },
     */
-  },
-};
+    },
+  };
 </script>
