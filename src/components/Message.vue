@@ -18,7 +18,7 @@
           class="text-caption ml-3"
           :class="dark ? 'text-white-50' : 'text-grey'"
         >
-          {{ timestamp }}
+          {{ formattedDate }}
         </span>
       </div>
       <div
@@ -50,6 +50,20 @@
       timestamp: {
         type: String,
         default: "",
+      },
+    },
+    computed: {
+      formattedDate() {
+        return this.formatDate(this.timestamp);
+      },
+    },
+    methods: {
+      formatDate(date) {
+        if (!date) return "";
+        return new Date(date).toLocaleString(undefined, {
+          dateStyle: "short",
+          timeStyle: "short",
+        });
       },
     },
   };

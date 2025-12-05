@@ -86,7 +86,7 @@
       :model-value="showChatModal"
       @close="showChatModal = false"
       :activityId="activityDetails.activityId"
-      :currentUserId="activityDetails.userId"
+      :currentUserId="loggedInUserId"
     />
   </v-container>
 </template>
@@ -113,7 +113,7 @@
         messages: [],
       };
     },
-    inject: [/*"activities",*/ "statusMap"],
+    inject: [/*"activities",*/ "statusMap", "loggedInUser"],
     computed: {
       priceTotal() {
         if (!this.activityDetails || !this.activityDetails.activityItems)
@@ -139,6 +139,10 @@
         if (!this.activityDetails) return "";
         const date = new Date(this.activityDetails.date);
         return date.toLocaleDateString();
+      },
+      loggedInUserId() {
+        const user = this.loggedInUser?.();
+        return user?.userId || null;
       },
     },
     methods: {

@@ -41,7 +41,7 @@
             :key="message.chatId"
             :class="['message-item', message.isMine ? 'message-right' : '']"
             :text="message.message"
-            :author="message.senderId"
+            :author="getUserName(message.senderId)"
             :timestamp="message.timeStamp"
             :dark="isMine(message)"
           />
@@ -61,6 +61,8 @@
   import ChatMessage from "./Message.vue";
   import ChatBox from "./ChatBox.vue";
   import ChatDataService from "@/services/ChatDataService";
+  import UserDataService from "@/services/UserDataService";
+
   export default {
     name: "ChatModal",
     components: {
@@ -84,6 +86,7 @@
     data() {
       return {
         messages: [],
+        users: {},
         isLoading: false,
       };
     },
@@ -106,6 +109,25 @@
       },
     },
     methods: {
+      getUserName(senderId) {
+        const user = this.users[senderId];
+        return user ? user.firstName : `Bruger ${senderId}`;
+      },
+      async fetchUser(userId) {
+        if (this.users[userId]) return; // Already fetched
+        try {
+          const response = await UserDataService.get(userId);
+          this.users[userId] = response.data;
+        } catch (error) {
+          console.error(`Error fetching user ${userId}:`, error);
+        }
+      },
+      async fetchUsersFromMessages() {
+        const uniqueSenderIds = [
+          ...new Set(this.messages.map((m) => m.senderId)),
+        ];
+        await Promise.all(uniqueSenderIds.map((id) => this.fetchUser(id)));
+      },
       handleSubmit(event, text) {
         if (!text) return;
         const newMessage = {
@@ -116,6 +138,7 @@
         ChatDataService.sendMessage(newMessage)
           .then((response) => {
             this.messages.push(response.data);
+            this.fetchUser(this.currentUserId);
             console.log("Message sent:", newMessage);
           })
           .catch((error) => {
@@ -132,19 +155,23 @@
         });
       },
     },
-    mounted() {
+    async mounted() {
       this.isLoading = true;
-      ChatDataService.getMessagesForActivity(this.activityId)
-        .then((response) => {
-          // Filter out null/undefined messages
-          this.messages = (response.data || []).filter(
-            (msg) => msg && msg.chatId
-          );
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          console.error("Error fetching messages:", error);
-        });
+      try {
+        const response = await ChatDataService.getMessagesForActivity(
+          this.activityId
+        );
+        this.messages = (response.data || []).filter(
+          (msg) => msg && msg.chatId
+        );
+        await this.fetchUsersFromMessages();
+        // Also fetch current user
+        await this.fetchUser(this.currentUserId);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      } finally {
+        this.isLoading = false;
+      }
     },
   };
 </script>
