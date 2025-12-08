@@ -13,15 +13,30 @@ import PantDetails from "./Pages/PantDetails.vue";
 import AfhenterPage from "./Pages/AfhenterPage.vue";
 import VejvisningPage from "./Pages/VejvisningPage.vue";
 import MyProfile from "./Pages/MyProfile.vue";
+import PantLocations from "./Pages/PantLocations.vue";
 
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
 import ImageBarcodeReader from "./components/barcodeScanner/ImageBarcodeReader.vue";
 import StreamBarcodeReader from "./components/barcodeScanner/StreamBarcodeReader.vue";
+import VueGoogleMaps from '@fawmi/vue-google-maps'
 
 export { ImageBarcodeReader, StreamBarcodeReader };
 
 loadFonts();
+
+// Suppress Google Maps deprecation warning for Marker and RetiredVersion warning
+const originalWarn = console.warn;
+console.warn = function(...args) {
+  if (args[0] && typeof args[0] === 'string') {
+    if (args[0].includes('google.maps.Marker is deprecated') ||
+        args[0].includes('Google Maps JavaScript API warning: RetiredVersion')) {
+      return;
+    }
+  }
+  originalWarn.apply(console, args);
+};
+
 // Navigation guards or additional router configuration can go here
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -73,6 +88,11 @@ const router = createRouter({
       path: "/min-profil",
       name: "MyProfile",
       component: MyProfile,
+    },
+    {
+      path: "/pant-locations",
+      name: "PantLocations",
+      component: PantLocations,
     },
     {
       path: "/admin",
@@ -136,4 +156,13 @@ const router = createRouter({
 
 const app = createApp(App);
 
-app.use(vuetify).use(router).mount("#app");
+app.use(vuetify).use(router).use(VueGoogleMaps, {
+    load: {
+        key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
+        loading: 'async',
+        defer: true,
+        libraries: 'marker',
+        v: '3.56',
+        // language: 'dk',
+    },
+}).mount("#app");
