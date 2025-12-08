@@ -144,6 +144,11 @@ const router = createRouter({
           name: "admin-activity-items",
           component: () => import("@/Pages/Admin/ActivityItemAdmin.vue"),
         },
+        {
+          path: "pickups",
+          name: "admin-pickups",
+          component: () => import("@/Pages/Admin/PickUpAdmin.vue"),
+        },
       ],
     },
   ],
