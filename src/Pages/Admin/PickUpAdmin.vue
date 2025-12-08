@@ -23,7 +23,9 @@
           <v-icon small class="mr-2" @click="EditPickUp(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="DeletePickUp(item.id)"> mdi-delete </v-icon>
+          <v-icon small @click="DeletePickUp(item.pickUpId)">
+            mdi-delete
+          </v-icon>
         </template>
         <template v-slot:no-data>
           <v-btn
@@ -102,6 +104,7 @@
               item.user ? `${item.user.firstName} ${item.user.lastName}` : "",
           },
           { title: "Aktivitet", key: "activityId" },
+          { title: "", key: "actions" },
         ],
         pickups: [],
         users: [],
