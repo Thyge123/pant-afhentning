@@ -116,134 +116,139 @@
 </template>
 
 <script>
-  //import ActivityDataService from "@/services/ActivityDataService";
-  export default {
-    name: "PantHistory",
-    props: {
-      IsPriceHidden: {
-        type: Boolean,
-        default: false,
-      },
-      IsAmountHidden: {
-        type: Boolean,
-        default: false,
-      },
-      IsExpandable: {
-        type: Boolean,
-        default: true,
-      },
-      ShowMoreLink: {
-        type: Boolean,
-        default: false,
-      },
+//import ActivityDataService from "@/services/ActivityDataService";
+export default {
+  name: "PantHistory",
+  props: {
+    IsPriceHidden: {
+      type: Boolean,
+      default: false,
     },
-    inject: ["activities"],
-    data() {
-      return {
-        selectedRow: null,
-        expandRow: false,
-        isLoading: false,
-        // activities: [],
-        statusMap: {
-          1: "Gemt",
-          2: "Anmodet",
-          3: "Afhentet",
-          4: "Afsluttet",
-        },
-      };
+    IsAmountHidden: {
+      type: Boolean,
+      default: false,
     },
-    computed: {
-      displayedActivities() {
-        if (this.IsPriceHidden || this.IsAmountHidden) {
-          return this.ProcessedActivities.slice(0, 5);
-        }
-        return this.ProcessedActivities;
-      },
-      totalAmount() {
-        return this.ProcessedActivities.reduce(
-          (sum, entry) => sum + entry.amount,
-          0
-        );
-      },
-      totalPrice() {
-        return this.ProcessedActivities.reduce(
-          (sum, entry) => sum + entry.price,
-          0
-        );
-      },
-      formattedDate() {
-        const date = new Date(this.date);
-        return date.toLocaleDateString();
-      },
-      ProcessedActivities() {
-        // Calculate totals for each activity before displaying
-        const processedActivities = this.activities.map((activity) => {
-          const items = activity.activityItems || [];
-
-          // Calculate total quantity for this activity
-          const amount = items.reduce((sum, item) => sum + item.quantity, 0);
-
-          // Calculate total price: quantity * category price
-          const price = items.reduce((sum, item) => {
-            const unitPrice = item.product?.category?.price || 0;
-            return sum + item.quantity * unitPrice;
-          }, 0);
-
-          return {
-            ...activity,
-            amount,
-            price,
-          };
-        });
-
-        processedActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        if (this.IsPriceHidden || this.IsAmountHidden) {
-          return processedActivities.slice(0, 5);
-        }
-        return processedActivities;
-      },
+    IsExpandable: {
+      type: Boolean,
+      default: true,
     },
-    methods: {
-      getStatusColor(status) {
-        switch (status) {
-          case 1:
-            return "green-darken-1";
-          case 2:
-            return "orange-darken-1";
-          case 3:
-            return "blue-darken-1";
-          default:
-            return "grey";
-        }
-      },
-      selectRow(index) {
-        if (this.IsExpandable === false) {
-          return;
-        }
-        if (this.selectedRow === index) {
-          this.clearSelection();
-          return;
-        }
-        this.selectedRow = index;
-        this.expandRow = true;
-      },
-      clearSelection() {
-        this.selectedRow = null;
-        this.expandRow = false;
-      },
-      ViewMore() {
-        const selectedActivity = this.displayedActivities[this.selectedRow];
-        console.log("Selected Activity:", selectedActivity);
-        if (selectedActivity && selectedActivity.activityId) {
-          this.$router.push(`/scanning/${selectedActivity.activityId}`);
-        }
-      },
+    ShowMoreLink: {
+      type: Boolean,
+      default: false,
     },
-    created() {
-      console.log(this.activities);
-      //this.isLoading = true;
-      /*
+  },
+  inject: ["activities"],
+  data() {
+    return {
+      selectedRow: null,
+      expandRow: false,
+      isLoading: false,
+      // activities: [],
+      statusMap: {
+        1: "Gemt",
+        2: "Anmodet",
+        3: "Accepteret",
+        4: "Afhentet",
+        5: "Afsluttet",
+      },
+    };
+  },
+  computed: {
+    displayedActivities() {
+      if (this.IsPriceHidden || this.IsAmountHidden) {
+        return this.ProcessedActivities.slice(0, 5);
+      }
+      return this.ProcessedActivities;
+    },
+    totalAmount() {
+      return this.ProcessedActivities.reduce(
+        (sum, entry) => sum + entry.amount,
+        0
+      );
+    },
+    totalPrice() {
+      return this.ProcessedActivities.reduce(
+        (sum, entry) => sum + entry.price,
+        0
+      );
+    },
+    formattedDate() {
+      const date = new Date(this.date);
+      return date.toLocaleDateString();
+    },
+    ProcessedActivities() {
+      // Calculate totals for each activity before displaying
+      const processedActivities = this.activities.map((activity) => {
+        const items = activity.activityItems || [];
+
+        // Calculate total quantity for this activity
+        const amount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+        // Calculate total price: quantity * category price
+        const price = items.reduce((sum, item) => {
+          const unitPrice = item.product?.category?.price || 0;
+          return sum + item.quantity * unitPrice;
+        }, 0);
+
+        return {
+          ...activity,
+          amount,
+          price,
+        };
+      });
+
+      processedActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (this.IsPriceHidden || this.IsAmountHidden) {
+        return processedActivities.slice(0, 5);
+      }
+      return processedActivities;
+    },
+  },
+  methods: {
+    getStatusColor(status) {
+      switch (status) {
+        case 1:
+          return "green-darken-1";
+        case 2:
+          return "orange-darken-1";
+        case 3:
+          return "blue-darken-1";
+        case 4:
+          return "purple-darken-1";
+        case 5:
+          return "grey-darken-1";
+        default:
+          return "grey";
+      }
+    },
+    selectRow(index) {
+      if (this.IsExpandable === false) {
+        return;
+      }
+      if (this.selectedRow === index) {
+        this.clearSelection();
+        return;
+      }
+      this.selectedRow = index;
+      this.expandRow = true;
+    },
+    clearSelection() {
+      this.selectedRow = null;
+      this.expandRow = false;
+    },
+    ViewMore() {
+      const selectedActivity = this.displayedActivities[this.selectedRow];
+      console.log("Selected Activity:", selectedActivity);
+      if (selectedActivity && selectedActivity.activityId) {
+        this.$router.push(`/scanning/${selectedActivity.activityId}`);
+      }
+    },
+  },
+  created() {
+    console.log(this.activities);
+    //this.isLoading = true;
+    /*
     ActivityDataService.getAll()
       .then((response) => {
         this.activities = response.data;
@@ -255,88 +260,88 @@
         this.isLoading = false;
       });
       */
-    },
-  };
+  },
+};
 </script>
 
 <style scoped>
-  .total {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    padding: 10px 20px;
-  }
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  padding: 10px 20px;
+}
 
-  h2 {
-    margin-bottom: 20px;
-  }
+h2 {
+  margin-bottom: 20px;
+}
 
-  .clickable-row {
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-  }
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
 
-  .clickable-row:hover {
-    background-color: #f5f5f5;
-  }
+.clickable-row:hover {
+  background-color: #f5f5f5;
+}
 
-  .row-selected {
-    background-color: #eeeeee !important;
-  }
+.row-selected {
+  background-color: #eeeeee !important;
+}
 
-  .expanded-details {
-    background-color: #fafafa;
-  }
+.expanded-details {
+  background-color: #fafafa;
+}
 
-  .items-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+.items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  .item-row {
-    display: grid;
-    justify-content: space-between;
-    grid-template-columns: 1fr auto auto;
-    gap: 12px;
-    font-size: 0.75rem;
-    padding: 2px 0;
-  }
+.item-row {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  font-size: 0.75rem;
+  padding: 2px 0;
+}
 
-  .view-more-container {
-    text-align: right;
-    margin-top: 8px;
-  }
+.view-more-container {
+  text-align: right;
+  margin-top: 8px;
+}
 
-  .item-type {
-    color: #424242;
-  }
+.item-type {
+  color: #424242;
+}
 
-  .item-quantity {
-    color: #424242;
-    font-weight: 500;
-    min-width: 60px;
-    text-align: right;
-  }
+.item-quantity {
+  color: #424242;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: right;
+}
 
-  .pant-history-link {
-    text-align: right;
-    margin: 10px 20px 0 0;
-    font-size: small;
-  }
+.pant-history-link {
+  text-align: right;
+  margin: 10px 20px 0 0;
+  font-size: small;
+}
 
-  .see-all-link {
-    color: #009fe4;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease-in-out;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-  }
+.see-all-link {
+  color: #009fe4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
 
-  .v-chip {
-    width: -webkit-fill-available;
-    place-content: center;
-  }
+.v-chip {
+  width: -webkit-fill-available;
+  place-content: center;
+}
 </style>
