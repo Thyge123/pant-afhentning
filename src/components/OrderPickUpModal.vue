@@ -49,13 +49,11 @@ export default {
   },
 
   computed: {
-    /*
-      SavedActivities() {
-        return this.activities.filter((activity) => activity.status === 1);
-      },
-      */
+    SavedActivities() {
+      return this.activities.filter((activity) => activity.status === 1);
+    },
     selectItems() {
-      return this.activities.map((activity) => ({
+      return this.SavedActivities.map((activity) => ({
         title: `#${activity.activityId} - ${new Date(
           activity.date
         ).toLocaleDateString()} - ${this.totalPrice} kr.`,

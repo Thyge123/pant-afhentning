@@ -11,8 +11,10 @@
             v-if="isActivityFinished"
             @open-report-dialog="showReportModal = true"
           />
+          <div class="chat-icon" @click="showChatModal = true">
+            <v-fab class="centered-fab" icon="mdi-chat"></v-fab>
+          </div>
         </v-card-title>
-
         <v-card-text v-if="activityDetails">
           <div class="details-grid">
             <div>
@@ -45,7 +47,7 @@
                 {{ item.product.name }} - {{ item.quantity }} stk.
               </v-list-item-title>
               <v-list-item-subtitle>
-                Pant: {{ item.product.category.price }}
+                Pant: {{ item.product.category.name }}
               </v-list-item-subtitle>
             </v-list-item>
           </v-list>
@@ -78,56 +80,73 @@
       @close-report-dialog="showReportModal = false"
       :activityId="activityDetails.id"
     />
+
+    <ChatModal
+      v-if="showChatModal"
+      :model-value="showChatModal"
+      @close="showChatModal = false"
+      :activityId="activityDetails.activityId"
+      :currentUserId="loggedInUserId"
+    />
   </v-container>
 </template>
 
 <script>
-import BugReportButton from "../components/BugReportButton.vue";
-import ReportModal from "../components/ReportModal.vue";
-import ActivityDataService from "@/services/ActivityDataService";
-export default {
-  name: "PantScanDetails",
-  components: {
-    BugReportButton,
-    ReportModal,
-  },
-  data() {
-    return {
-      activityDetails: null,
-      showReportModal: false,
-      isLoading: true,
-    };
-  },
-  inject: [/*"activities",*/ "statusMap"],
-  computed: {
-    priceTotal() {
-      if (!this.activityDetails || !this.activityDetails.activityItems)
-        return 0;
+  import BugReportButton from "../components/BugReportButton.vue";
+  import ChatModal from "../components/ChatModal.vue";
+  import ReportModal from "../components/ReportModal.vue";
+  import ActivityDataService from "@/services/ActivityDataService";
 
-      return this.activityDetails.activityItems.reduce(
-        (sum, item) => sum + item.quantity * item.product.category.price,
-        0
-      );
+  export default {
+    name: "PantScanDetails",
+    components: {
+      BugReportButton,
+      ChatModal,
+      ReportModal,
     },
-    totalAmount() {
-      if (!this.activityDetails || !this.activityDetails.activityItems)
-        return 0;
-      return this.activityDetails.activityItems.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      );
+    data() {
+      return {
+        activityDetails: null,
+        showReportModal: false,
+        showChatModal: false,
+        isLoading: true,
+        messages: [],
+      };
     },
-    isActivityFinished() {
-      return this.activityDetails && this.activityDetails.statusId === 4;
+    inject: [/*"activities",*/ "statusMap", "loggedInUser"],
+    computed: {
+      priceTotal() {
+        if (!this.activityDetails || !this.activityDetails.activityItems)
+          return 0;
+
+        return this.activityDetails.activityItems.reduce(
+          (sum, item) => sum + item.quantity * item.product.category.price,
+          0
+        );
+      },
+      totalAmount() {
+        if (!this.activityDetails || !this.activityDetails.activityItems)
+          return 0;
+        return this.activityDetails.activityItems.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+      },
+      isActivityFinished() {
+        return this.activityDetails && this.activityDetails.statusId === 4;
+      },
+      formattedDate() {
+        if (!this.activityDetails) return "";
+        const date = new Date(this.activityDetails.date);
+        return date.toLocaleDateString();
+      },
+      loggedInUserId() {
+        const user = this.loggedInUser?.();
+        return user?.userId || null;
+      },
     },
-    formattedDate() {
-      if (!this.activityDetails) return "";
-      const date = new Date(this.activityDetails.date);
-      return date.toLocaleDateString();
-    },
-  },
-  methods: {
-    /*
+    methods: {
+      /*
     fetchActivityDetails(activityId) {
       this.activityDetails = this.activities.find(
         (activity) => activity.id === parseInt(activityId)
@@ -135,50 +154,55 @@ export default {
       console.log("Fetched activity details:", this.activityDetails);
     },
     */
-    GetActivityById(id) {
-      return ActivityDataService.get(id)
-        .then((response) => {
-          this.activityDetails = response.data;
-          console.log("Fetched activity details:", this.activityDetails);
-          this.isLoading = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isLoading = false;
-        });
+      GetActivityById(id) {
+        return ActivityDataService.get(id)
+          .then((response) => {
+            this.activityDetails = response.data;
+            console.log("Fetched activity details:", this.activityDetails);
+            this.isLoading = false;
+          })
+          .catch((e) => {
+            console.log(e);
+            this.isLoading = false;
+          });
+      },
     },
-  },
-  mounted() {
-    const activityId = this.$route.params.id;
-    // Fetch and display details based on activityId
-    this.GetActivityById(activityId);
-  },
-};
+    mounted() {
+      const activityId = this.$route.params.id;
+      // Fetch and display details based on activityId
+      this.GetActivityById(activityId);
+    },
+  };
 </script>
 
 <style scoped>
-.pant-details {
-  max-width: 800px;
-  margin: auto;
-}
+  .pant-details {
+    max-width: 800px;
+    margin: auto;
+  }
 
-.details-grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
+  .details-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
 
-.totals-container {
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  gap: 16px;
-}
+  .totals-container {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    gap: 16px;
+  }
 
-.total-item {
-  flex: 1;
-  padding: 16px;
-  border-radius: 4px;
-  background-color: #f5f5f5;
-}
+  .total-item {
+    flex: 1;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+  }
+
+  .chat-icon {
+    cursor: pointer;
+    color: #000000de;
+  }
 </style>

@@ -81,6 +81,12 @@
             value="report-reasons"
             :to="{ name: 'admin-report-reasons' }"
           ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-truck"
+            title="PickUps"
+            value="pickups"
+            :to="{ name: 'admin-pickups' }"
+          ></v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-main style="height: 80vh">
@@ -91,13 +97,13 @@
 </template>
 
 <script>
-export default {
-  name: "AdminPage",
-  data() {
-    return {
-      drawer: true,
-      rail: true,
-    };
-  },
-};
+  export default {
+    name: "AdminPage",
+    data() {
+      return {
+        drawer: true,
+        rail: true,
+      };
+    },
+  };
 </script>

@@ -146,9 +146,10 @@ export default {
       // activities: [],
       statusMap: {
         1: "Gemt",
-        2: "Afhenter",
-        3: "Afhentet",
-        4: "Afsluttet",
+        2: "Anmodet",
+        3: "Accepteret",
+        4: "Afhentet",
+        5: "Afsluttet",
       },
     };
   },
@@ -213,6 +214,10 @@ export default {
           return "orange-darken-1";
         case 3:
           return "blue-darken-1";
+        case 4:
+          return "purple-darken-1";
+        case 5:
+          return "grey-darken-1";
         default:
           return "grey";
       }
